@@ -26,7 +26,7 @@
       color: #333;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       min-height: 100vh;
       padding: 20px;
     }
@@ -47,8 +47,9 @@
       text-align: center;
     }
 
+    /* تصغير حجم اللوغو */
     .container header img {
-      height: 60px;
+      height: 50px;
     }
 
     .content {
@@ -69,6 +70,15 @@
       border: 1px solid #ccc;
       border-radius: 10px;
       margin-bottom: 15px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    /* تغيير لون الإطار عند التركيز */
+    select:focus,
+    input[type=number]:focus {
+      outline: none;
+      border-color: #22cfcf;
+      box-shadow: 0 0 0 3px rgba(34, 207, 207, 0.3);
     }
 
     button {
@@ -88,6 +98,7 @@
       background-color: #1bbaba;
     }
 
+    /* صندوق النتيجة */
     #result {
       margin-top: 20px;
       padding: 20px;
@@ -105,6 +116,21 @@
     #result.show {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    #result p {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    /* الملاحظات التوضيحية */
+    .notes {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #666;
+    }
+    .notes p {
+      margin-bottom: 6px;
     }
 
     .order-button {
@@ -125,12 +151,8 @@
       background-color: #218838;
       transform: scale(1.02);
     }
-    #result p {
-      margin-bottom: 12px;
-      line-height: 1.6;
-    }
-    
-    /* تسويصميم متجاوب للشاشات الصغيرة */
+
+    /* تصميم متجاوب للشاشات الصغيرة */
     @media (max-width: 480px) {
       body {
         padding: 0;
@@ -144,6 +166,9 @@
       }
       .content {
         padding: 20px;
+      }
+      .container header img {
+        height: 45px;
       }
     }
   </style>
@@ -171,6 +196,11 @@
 
       <button id="calcBtn">احسب!</button>
       <div id="result"></div>
+      <!-- ملاحظات توضيحية -->
+      <div class="notes">
+        <p>• السعر لا يتضمّن رسوم التوصيل.</p>
+        <p>• يُضاف هامش 3 سم إلى قياس الطول.</p>
+      </div>
     </div>
   </div>
 
