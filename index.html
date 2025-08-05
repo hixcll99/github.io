@@ -125,6 +125,27 @@
       background-color: #218838;
       transform: scale(1.02);
     }
+    #result p {
+      margin-bottom: 12px;
+      line-height: 1.6;
+    }
+    
+    /* تسويصميم متجاوب للشاشات الصغيرة */
+    @media (max-width: 480px) {
+      body {
+        padding: 0;
+      }
+      .container {
+        border-radius: 0;
+        max-width: 100%;
+        width: 100%;
+        margin: 0;
+        box-shadow: none;
+      }
+      .content {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
