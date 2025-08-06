@@ -2,13 +2,19 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>حاسبة السعر والتفاصيل</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+    }
     :root {
       --primary: #22cfcf;
       --primary-dark: #1bbaba;
@@ -24,8 +30,6 @@
     }
     *, *::before, *::after {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
     }
     body {
       font-family: var(--font-family);
@@ -34,85 +38,46 @@
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      padding: 0; /* إزالة التباعد الكلي حول الإطار */
-    
-      font-family: var(--font-family);
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 2rem;
+      min-height: 100vh;
     }
     .container {
-      width: 100%; /* ملء كامل العرض */
-      max-width: none; /* إزالة الحد الأقصى للعرض */
+      width: 100vw;
       background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: 0 0.5rem 1.25rem var(--shadow);
-      overflow: hidden;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      box-shadow: 0 -4px 12px var(--shadow);
+      overflow: visible;
       animation: slideIn 0.5s ease;
     }
     header {
       position: relative;
       background: linear-gradient(45deg, var(--primary), var(--primary-dark));
       background-size: 200% 200%;
-      animation: gradientBG 6s linear infinite;
-      padding: 1rem;
+      animation: gradientBG 6s ease infinite;
+      padding: 0.5rem; /* reduced padding */
       text-align: center;
-    }
-    header::before,
-    header::after {
-      content: '';
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      background: rgba(255,255,255,0.2);
-      border-radius: 50%;
-    }
-    header::before {
-      top: -40px;
-      left: -40px;
-      animation: floatBG 8s ease-in-out infinite;
-    }
-    header::after {
-      bottom: -40px;
-      right: -40px;
-      animation: floatBG 8s ease-in-out infinite reverse;
+      overflow: visible;
     }
     header .logo-container img {
-      height: 3rem;
-      filter: brightness(0) invert(1);
+      height: 2.5rem; /* reduced height */
       animation: float 3s ease-in-out infinite;
       position: relative;
       z-index: 1;
     }
-    @keyframes gradientBG {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-    }
-    @keyframes floatBG {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(10px, 10px); }
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-1rem); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+    @keyframes gradientBG {0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+    @keyframes float {0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+    @keyframes slideIn {from{opacity:0;transform:translateY(-1rem)}to{opacity:1;transform:translateY(0)}}
     form.content {
-      padding: 2rem;
+      padding: 1rem;
+      background: var(--card-bg);
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+      box-shadow: 0 -2px 8px var(--shadow);
       display: grid;
       gap: 1rem;
     }
-    label {
-      font-weight: 600;
-    }
-    select,
-    input[type="number"] {
+    label { font-weight: 600; display: block; }
+    select, input[type="number"] {
       width: 100%;
       padding: 0.75rem;
       font-size: 1rem;
@@ -120,11 +85,10 @@
       border-radius: var(--radius);
       transition: border-color var(--transition), box-shadow var(--transition);
     }
-    select:focus,
-    input[type="number"]:focus {
+    select:focus, input[type="number"]:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(34, 207, 207, 0.2);
+      box-shadow: 0 0 0 4px rgba(34,207,207,0.2);
     }
     button {
       width: 100%;
@@ -138,9 +102,7 @@
       cursor: pointer;
       transition: background var(--transition);
     }
-    button:hover {
-      background: var(--primary-dark);
-    }
+    button:hover { background: var(--primary-dark); }
     #result {
       margin-top: 1rem;
       background: linear-gradient(to top left, #e6f5f3, #b8e5de);
@@ -152,58 +114,35 @@
       transform: translateY(1rem);
       transition: opacity var(--transition), transform var(--transition);
     }
-    #result.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    #result.show { opacity: 1; transform: translateY(0); }
     .order-button {
       display: block;
       margin-top: 1rem;
       padding: 0.75rem;
       text-align: center;
-      text-decoration: none;
       background: var(--success);
       color: #fff;
       border-radius: var(--radius);
       font-weight: 600;
+      text-decoration: none;
       transition: background var(--transition), transform 0.2s;
     }
-    .order-button:hover {
-      background: var(--success-dark);
-      transform: scale(1.02);
-    }
-    .notes {
-      font-size: 0.875rem;
-      color: #666;
-      margin-top: 1rem;
-    }
-    .notes p {
-      margin-bottom: 0.25rem;
-    }
+    .order-button:hover { background: var(--success-dark); transform: scale(1.02); }
+    .notes { font-size: 0.875rem; color: #666; margin-top: 1rem; }
+    .notes p { margin-bottom: 0.25rem; }
     footer.footer {
       background: var(--primary-dark);
       color: #fff;
       text-align: center;
-      padding: 0.75rem;
-      font-size: 0.875rem;
+      height: 1.75rem; /* fixed height half of header total height (~3.5rem) */
+      line-height: 1.75rem; /* vertically center text */
+      font-size: 0.75rem;
+      padding: 0; /* remove extra padding */
+      margin-top: -0.5rem; /* overlap slight if needed */
     }
     @media (max-width: 480px) {
-      body {
-        padding: 1rem;
-      }
-      .container {
-        width: 100%;
-        margin: 0;
-        border-radius: 0;
-        box-shadow: none;
-      }
-      header::before,
-      header::after {
-        display: none;
-      }
-      header .logo-container img {
-        height: 2.5rem;
-      }
+      form.content { padding: 0.75rem; }
+      .logo-container img { height: 2rem; }
     }
   </style>
 </head>
@@ -252,11 +191,9 @@
       const labelHeight = document.getElementById('labelHeight');
       const calcBtn = document.getElementById('calcBtn');
       const resultBox = document.getElementById('result');
-
       shapeEl.addEventListener('change', updateFields);
       calcBtn.addEventListener('click', onCalculate);
       updateFields();
-
       function updateFields() {
         const shape = shapeEl.value;
         if (shape === 'مربع' || shape === 'دائري') {
@@ -271,33 +208,16 @@
           heightEl.placeholder = 'أدخل الطول';
         }
       }
-
       function onCalculate() {
-        resultBox.classList.remove('show');
-        resultBox.innerHTML = '';
-
-        const shape = shapeEl.value;
-        const h = parseFloat(heightEl.value);
-        const w = parseFloat(widthEl.value);
-        if (isNaN(h) || h <= 0 || (shape === 'مستطيل' && (isNaN(w) || w <= 0))) {
-          alert('يرجى إدخال قيم صحيحة موجبة.');
-          return;
-        }
-        const meters = h / 100;
-        const totalPrice = meters * 13500;
-        const roundedPrice = Math.round(totalPrice / 250) * 250;
-        const formatted = roundedPrice.toLocaleString('en-US') + ' د.ع';
-        const weight = ((shape === 'مستطيل' ? w : h) / 100 * (h / 100)).toFixed(2);
-        const msg = encodeURIComponent(`مرحبا, اريد غطاء بقياس ${h}×${shape === 'مستطيل' ? w : h} بسعر ${formatted}`);
+        resultBox.classList.remove('show'); resultBox.innerHTML = '';
+        const shape = shapeEl.value; const h = parseFloat(heightEl.value); const w = parseFloat(widthEl.value);
+        if (isNaN(h) || h <= 0 || (shape === 'مستطيل' && (isNaN(w) || w <= 0))) { alert('يرجى إدخال قيم صحيحة موجبة.'); return; }
+        const meters = h/100; const totalPrice = meters*13500; const roundedPrice = Math.round(totalPrice/250)*250;
+        const formatted = roundedPrice.toLocaleString('en-US')+' د.ع';
+        const weight = ((shape==='مستطيل'?w:h)/100 * (h/100)).toFixed(2);
+        const msg = encodeURIComponent(`مرحبا, اريد غطاء بقياس ${h}×${shape==='مستطيل'?w:h} بسعر ${formatted}`);
         const waLink = `https://wa.me/9647724522333?text=${msg}`;
-
-        resultBox.innerHTML = `
-          <p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${h} × ${shape === 'مستطيل' ? w : h} سم</p>
-          <p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formatted}</p>
-          <p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p>
-          <p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p>
-          <a href="${waLink}" target="_blank" class="order-button">اطلب الآن</a>
-        `;
+        resultBox.innerHTML = `<p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${h} × ${shape==='مستطيل'?w:h} سم</p><p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formatted}</p><p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p><p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p><a href="${waLink}" target="_blank" class="order-button">اطلب الآن</a>`;
         resultBox.classList.add('show');
       }
     });
