@@ -1,76 +1,158 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>حساب سعر النايلون</title>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    crossorigin="anonymous"
-  />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans&display=swap');
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #22cfcf;
+      --primary-dark: #1bbaba;
+      --success: #28a745;
+      --success-dark: #218838;
+      --bg: #f0fafa;
+      --card-bg: #fff;
+      --text: #333;
+      --shadow: rgba(0,0,0,0.1);
+      --radius: 1rem;
+      --transition: 0.3s ease;
+      --font-family: 'IBM Plex Sans', sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: 'IBM Plex Sans', sans-serif; direction: rtl;
-      background-color: #f0fafa; color: #333;
-      display: flex; justify-content: center; align-items: flex-start;
-      min-height: 100vh; padding: 20px;
+      font-family: var(--font-family);
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 1rem;
     }
     .container {
-      background: white; border-radius: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      max-width: 420px; width: 100%; overflow: hidden;
+      width: 100%;
+      max-width: 400px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 0.5rem 1.25rem var(--shadow);
+      overflow: hidden;
+      animation: slideIn 0.5s ease;
     }
-    header { background: #22cfcf; padding: 10px; text-align: center; }
-    header img { height: 50px; }
-    .content { padding: 30px; }
-    label { display: block; margin: 10px 0 5px; font-weight: 600; }
-    select, input[type=number] {
-      width: 100%; padding: 12px; font-size: 16px;
-      border: 1px solid #ccc; border-radius: 10px;
-      margin-bottom: 15px; transition: border-color .3s, box-shadow .3s;
+    header {
+      background: var(--primary);
+      padding: 1rem;
+      text-align: center;
     }
-    select:focus, input[type=number]:focus {
-      outline: none; border-color: #22cfcf;
-      box-shadow: 0 0 0 3px rgba(34,207,207,0.3);
+    header img {
+      height: 3rem;
+      filter: brightness(0) invert(1);
+      loading: lazy;
+    }
+    form.content {
+      padding: 2rem;
+      display: grid;
+      gap: 1rem;
+    }
+    label {
+      font-weight: 600;
+    }
+    select, input[type='number'] {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    select:focus, input[type='number']:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(34,207,207,0.2);
+      outline: none;
     }
     button {
-      width:100%; padding:12px; font-size:16px;
-      background:#22cfcf; border:none; border-radius:10px;
-      color:white; font-weight:bold; cursor:pointer;
-      transition:background .3s;
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--primary);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
     }
-    button:hover { background:#1bbaba; }
+    button:hover {
+      background: var(--primary-dark);
+    }
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      background: rgba(255,255,255,0.7);
+      animation: ripple 0.6s linear;
+    }
+    @keyframes ripple {
+      to { transform: scale(4); opacity: 0; }
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-1rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
     #result {
-      margin-top:20px; padding:20px; border-radius:15px;
-      background:linear-gradient(to top left, #e6f5f3, #b8e5de);
-      color:#114444; font-size:18px;
-      opacity:0; transform:translateY(10px);
-      transition:opacity .5s, transform .5s;
-      box-shadow:0 4px 12px rgba(0,0,0,0.1);
-      border-right:6px solid #22cfcf;
+      background: linear-gradient(to top left, #e6f5f3, #b8e5de);
+      border-right: 0.5rem solid var(--primary);
+      padding: 1rem;
+      border-radius: var(--radius);
+      box-shadow: 0 0.25rem 0.75rem var(--shadow);
+      opacity: 0;
+      transform: translateY(1rem);
+      transition: opacity var(--transition), transform var(--transition);
     }
-    #result.show { opacity:1; transform:translateY(0); }
-    #result p { margin-bottom:8px; line-height:1.6; }
-    .notes { margin-top:15px; font-size:14px; color:#666; }
-    .notes p { margin-bottom:6px; }
+    #result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    #result p {
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
     .order-button {
-      display:block; margin:15px auto 0;
-      padding:12px; width:calc(100% - 40px);
-      background:#28a745; color:#fff;
-      text-align:center; text-decoration:none;
-      border-radius:10px; font-weight:bold;
-      transition:background .3s, transform .2s;
+      display: block;
+      margin: 1rem 0 0;
+      padding: 0.75rem;
+      text-align: center;
+      text-decoration: none;
+      background: var(--success);
+      color: #fff;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: background var(--transition), transform 0.2s;
     }
-    .order-button:hover { background:#218838; transform:scale(1.02); }
-    @media (max-width:480px) {
-      body { padding:0; }
-      .container { border-radius:0; width:100%; margin:0; box-shadow:none; }
-      .content { padding:20px; }
-      header img { height:45px; }
+    .order-button:hover {
+      background: var(--success-dark);
+      transform: scale(1.02);
+    }
+    .notes {
+      font-size: 0.875rem;
+      color: #666;
+    }
+    .notes p {
+      margin-bottom: 0.25rem;
+    }
+    @media (max-width: 480px) {
+      body { padding: 0; }
+      .container { border-radius: 0; box-shadow: none; }
+      header img { height: 2.5rem; }
     }
   </style>
 </head>
@@ -79,89 +161,126 @@
     <header>
       <img src="https://i.ibb.co/hx8P56yc/image.png" alt="شعار الموقع">
     </header>
-    <div class="content">
-      <label for="shape">الشكل:</label>
-      <select id="shape">
-        <option value="مستطيل">مستطيل</option>
-        <option value="مربع">مربع</option>
-        <option value="دائري">دائري</option>
-      </select>
-      <label for="width" id="labelWidth">العرض (سم):</label>
-      <input type="number" id="width" placeholder="أدخل العرض" min="0" />
-      <label for="height" id="labelHeight">الطول (سم):</label>
-      <input type="number" id="height" placeholder="أدخل الطول" min="0" />
-      <button id="calcBtn">احسب!</button>
-      <div id="result"></div>
+    <form class="content" novalidate>
+      <div>
+        <label for="shape">الشكل:</label>
+        <select id="shape" name="shape" required>
+          <option value="مستطيل">مستطيل</option>
+          <option value="مربع">مربع</option>
+          <option value="دائري">دائري</option>
+        </select>
+      </div>
+      <div>
+        <label id="labelWidth" for="width">العرض (سم):</label>
+        <input type="number" id="width" name="width" placeholder="أدخل العرض" min="0.1" step="0.1" required>
+      </div>
+      <div id="heightGroup">
+        <label id="labelHeight" for="height">الطول (سم):</label>
+        <input type="number" id="height" name="height" placeholder="أدخل الطول" min="0.1" step="0.1" required>
+      </div>
+      <button type="submit" id="calcBtn">احسب!</button>
+      <div id="result" role="region" aria-live="polite"></div>
       <div class="notes">
         <p>• السعر لا يتضمّن رسوم التوصيل.</p>
         <p>• يُضاف هامش 3 سم إلى قياس الطول.</p>
       </div>
-    </div>
+    </form>
   </div>
   <script>
-    const shapeEl = document.getElementById('shape');
-    const widthEl = document.getElementById('width');
-    const heightEl = document.getElementById('height');
-    const labelWidth = document.getElementById('labelWidth');
-    const labelHeight = document.getElementById('labelHeight');
-
-    function updateFields() {
-      const shape = shapeEl.value;
-      if (shape === 'مستطيل') {
-        labelWidth.textContent = 'العرض (سم):';
-        widthEl.placeholder = 'أدخل العرض';
-        labelHeight.style.display = '';
-        heightEl.style.display = '';
-      } else if (shape === 'مربع') {
-        labelWidth.textContent = 'طول الضلع (سم):';
-        widthEl.placeholder = 'أدخل طول الضلع';
-        labelHeight.style.display = 'none';
-        heightEl.style.display = 'none';
-      } else if (shape === 'دائري') {
-        labelWidth.textContent = 'قطر الدائرة (سم):';
-        widthEl.placeholder = 'أدخل قطر الدائرة';
-        labelHeight.style.display = 'none';
-        heightEl.style.display = 'none';
-      }
-    }
-
-    shapeEl.addEventListener('change', updateFields);
-    updateFields();
-
-    document.getElementById('calcBtn').addEventListener('click', function() {
-      let width = parseFloat(widthEl.value);
-      let height = parseFloat(heightEl.value);
-      if (!width || width <= 0 || (shapeEl.value === 'مستطيل' && (!height || height <= 0))) {
-        alert('يرجى إدخال قيم صحيحة موجبة.');
-        return;
-      }
-      if (shapeEl.value !== 'مستطيل') {
-        height = width;
-      }
-      const heightWithAllowance = height + 3;
-      const meters = heightWithAllowance / 100;
-      const pricePerMeter = 13500;
-      const totalPrice = meters * pricePerMeter;
-      const weight = ((width / 100) * (heightWithAllowance / 100)).toFixed(2);
-      const formattedPrice = formatPrice(totalPrice);
-      const message = encodeURIComponent(`مرحبا, اريد غطاء بقياس ${width}×${height} بسعر ${formattedPrice}`);
-      const waLink = `https://wa.me/9647724522333?text=${message}`;
-
+    document.addEventListener('DOMContentLoaded', () => {
+      const shapeEl = document.getElementById('shape');
+      const widthEl = document.getElementById('width');
+      const heightEl = document.getElementById('height');
+      const heightGroup = document.getElementById('heightGroup');
+      const labelWidth = document.getElementById('labelWidth');
+      const labelHeight = document.getElementById('labelHeight');
+      const form = document.querySelector('form');
+      const btn = document.getElementById('calcBtn');
       const resultBox = document.getElementById('result');
-      resultBox.innerHTML = `
-        <p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${width} × ${height} سم</p>
-        <p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formattedPrice}</p>
-        <p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p>
-        <p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p>
-        <a href="${waLink}" target="_blank" class="order-button">اطلب الآن</a>
-      `;
-      resultBox.classList.add('show');
-    });
 
-    function formatPrice(value) {
-      const rounded = Math.round(value / 250) * 250;
-      return rounded.toLocaleString('en-US') + ' د.ع';
-    }
+      // ripple effect
+      btn.addEventListener('click', function(e) {
+        const circle = document.createElement('span');
+        const diameter = Math.max(this.clientWidth, this.clientHeight);
+        const radius = diameter / 2;
+        circle.style.width = circle.style.height = `${diameter}px`;
+        circle.style.left = `${e.clientX - this.offsetLeft - radius}px`;
+        circle.style.top = `${e.clientY - this.offsetTop - radius}px`;
+        circle.classList.add('ripple');
+        const ripple = this.getElementsByClassName('ripple')[0];
+        if (ripple) ripple.remove();
+        this.appendChild(circle);
+      });
+
+      shapeEl.addEventListener('change', updateFields);
+      form.addEventListener('submit', onCalculate);
+
+      function updateFields() {
+        const shape = shapeEl.value;
+        if (shape === 'مربع') {
+          labelWidth.textContent = 'طول الضلع (سم):';
+          widthEl.placeholder = 'أدخل طول الضلع';
+          heightGroup.style.display = 'none';
+          heightEl.removeAttribute('required');
+        } else if (shape === 'دائري') {
+          labelWidth.textContent = 'قطر الدائرة (سم):';
+          widthEl.placeholder = 'أدخل قطر الدائرة';
+          heightGroup.style.display = 'none';
+          heightEl.removeAttribute('required');
+        } else {
+          labelWidth.textContent = 'العرض (سم):';
+          widthEl.placeholder = 'أدخل العرض';
+          heightGroup.style.display = 'block';
+          heightEl.setAttribute('required', '');
+        }
+      }
+
+      function onCalculate(e) {
+        e.preventDefault();
+        clearErrors();
+        const shape = shapeEl.value;
+        const width = parseFloat(widthEl.value);
+        const heightInput = parseFloat(heightEl.value);
+        if (isNaN(width) || width <= 0 || (shape === 'مستطيل' && (isNaN(heightInput) || heightInput <= 0))) {
+          showError('يرجى إدخال قيم صحيحة موجبة.');
+          return;
+        }
+        const height = shape === 'مستطيل' ? heightInput : width;
+        const adjustedHeight = height + 3;
+        const meters = adjustedHeight / 100;
+        const pricePerMeter = 13500;
+        const totalPrice = meters * pricePerMeter;
+        const roundedPrice = Math.round(totalPrice / 250) * 250;
+        const formatted = roundedPrice.toLocaleString('en-US') + ' د.ع';
+        const weight = ((width/100) * (adjustedHeight/100)).toFixed(2);
+        const message = encodeURIComponent(`مرحبا, اريد غطاء بقياس ${width}×${height} بسعر ${formatted}`);
+        const waLink = `https://wa.me/9647724522333?text=${message}`;
+
+        resultBox.innerHTML = `
+          <p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${width} × ${height} سم</p>
+          <p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formatted}</p>
+          <p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p>
+          <p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p>
+          <a href="${waLink}" target="_blank" rel="noopener" class="order-button">اطلب الآن</a>
+        `;
+        requestAnimationFrame(() => resultBox.classList.add('show'));
+        resultBox.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      function showError(msg) {
+        const err = document.createElement('div');
+        err.className = 'error';
+        err.textContent = msg;
+        form.prepend(err);
+      }
+
+      function clearErrors() {
+        const prev = form.querySelector('.error');
+        if (prev) prev.remove();
+      }
+
+      updateFields();
+    });
   </script>
 </body>
 </html>
