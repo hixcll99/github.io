@@ -28,9 +28,7 @@
       --transition: 0.3s;
       --font-family: 'IBM Plex Sans', sans-serif;
     }
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
     body {
       font-family: var(--font-family);
       background: var(--bg);
@@ -54,12 +52,12 @@
       background: linear-gradient(45deg, var(--primary), var(--primary-dark));
       background-size: 200% 200%;
       animation: gradientBG 6s ease infinite;
-      padding: 0.5rem; /* reduced padding */
+      padding: 0.5rem;
       text-align: center;
       overflow: visible;
     }
     header .logo-container img {
-      height: 2.5rem; /* reduced height */
+      height: 2.5rem;
       animation: float 3s ease-in-out infinite;
       position: relative;
       z-index: 1;
@@ -114,7 +112,7 @@
       transform: translateY(1rem);
       transition: opacity var(--transition), transform var(--transition);
     }
-    #result.show { opacity: 1; transform: translateY(0); }
+    #result.show { opacity: 1; transform: translateY(0); display: block; }
     .order-button {
       display: block;
       margin-top: 1rem;
@@ -134,11 +132,11 @@
       background: var(--primary-dark);
       color: #fff;
       text-align: center;
-      height: 1.75rem; /* fixed height half of header total height (~3.5rem) */
-      line-height: 1.75rem; /* vertically center text */
+      height: 1.75rem;
+      line-height: 1.75rem;
       font-size: 0.75rem;
-      padding: 0; /* remove extra padding */
-      margin-top: -0.5rem; /* overlap slight if needed */
+      padding: 0;
+      margin-top: -0.5rem;
     }
     @media (max-width: 480px) {
       form.content { padding: 0.75rem; }
@@ -191,9 +189,11 @@
       const labelHeight = document.getElementById('labelHeight');
       const calcBtn = document.getElementById('calcBtn');
       const resultBox = document.getElementById('result');
+
       shapeEl.addEventListener('change', updateFields);
       calcBtn.addEventListener('click', onCalculate);
       updateFields();
+
       function updateFields() {
         const shape = shapeEl.value;
         if (shape === 'مربع' || shape === 'دائري') {
@@ -208,16 +208,25 @@
           heightEl.placeholder = 'أدخل الطول';
         }
       }
+
       function onCalculate() {
         resultBox.classList.remove('show'); resultBox.innerHTML = '';
         const shape = shapeEl.value; const h = parseFloat(heightEl.value); const w = parseFloat(widthEl.value);
         if (isNaN(h) || h <= 0 || (shape === 'مستطيل' && (isNaN(w) || w <= 0))) { alert('يرجى إدخال قيم صحيحة موجبة.'); return; }
-        const meters = h/100; const totalPrice = meters*13500; const roundedPrice = Math.round(totalPrice/250)*250;
-        const formatted = roundedPrice.toLocaleString('en-US')+' د.ع';
+        const lengthInMeters = h / 100;
+        const widthInMeters = (shape === 'مستطيل') ? w / 100 : lengthInMeters;
+        const area = lengthInMeters * widthInMeters;
+        const totalPrice = area * 13500;
+        const roundedPrice = Math.round(totalPrice / 250) * 250;
+        const formatted = roundedPrice.toLocaleString('en-US') + ' د.ع';
         const weight = ((shape==='مستطيل'?w:h)/100 * (h/100)).toFixed(2);
         const msg = encodeURIComponent(`مرحبا, اريد غطاء بقياس ${h}×${shape==='مستطيل'?w:h} بسعر ${formatted}`);
         const waLink = `https://wa.me/9647724522333?text=${msg}`;
-        resultBox.innerHTML = `<p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${h} × ${shape==='مستطيل'?w:h} سم</p><p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formatted}</p><p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p><p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p><a href="${waLink}" target="_blank" class="order-button">اطلب الآن</a>`;
+        resultBox.innerHTML = `<p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${h} × ${shape==='مستطيل'?w:h} سم</p>` +
+                              `<p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formatted}</p>` +
+                              `<p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p>` +
+                              `<p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p>` +
+                              `<a href="${waLink}" target="_blank" class="order-button">اطلب الآن</a>`;
         resultBox.classList.add('show');
       }
     });
