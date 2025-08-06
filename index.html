@@ -14,22 +14,65 @@
     *, *::before, *::after { box-sizing: border-box; }
     body { font-family: var(--font-family); background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; }
     .container { width: 100vw; background: var(--card-bg); border-top-left-radius: var(--radius); border-top-right-radius: var(--radius); overflow: visible; animation: slideIn 0.5s ease; padding-bottom: calc(var(--footer-height) + 1rem); min-height: 100vh; }
-    header { position: relative; background: linear-gradient(45deg, var(--primary), var(--primary-dark)); background-size: 200% 200%; animation: gradientBG 6s ease infinite; padding: 0.5rem; text-align: center; }
-    header .logo-container img { height: 2.5rem; animation: float 3s ease-in-out infinite; position: relative; z-index: 1; }
+    header { background: linear-gradient(45deg, var(--primary), var(--primary-dark)); background-size: 200% 200%; animation: gradientBG 6s ease infinite; padding: 0.5rem; text-align: center; }
+    header .logo-container img { height: 2.5rem; animation: float 3s ease-in-out infinite; }
     @keyframes gradientBG {0%,100%{background-position:0% 50%}50%{background-position:100% 50%}} @keyframes float {0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}} @keyframes slideIn {from{opacity:0;transform:translateY(-1rem)}to{opacity:1;transform:translateY(0)}}
-    form.content { padding: 1rem; background: var(--card-bg); margin: 2rem auto 0; display: grid; gap: 0.5rem; }
-    label { font-weight: 600; display: block; padding-right: 0.75rem; margin-bottom: 0.25rem; }
-    select, input[type="number"] { width: 100%; padding: 0.75rem; font-size: 1rem; border: 1px solid #ccc; border-radius: var(--radius); transition: border-color var(--transition), box-shadow var(--transition); }
-    select:focus, input[type="number"]:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(34,207,207,0.2); }
-    button#calcBtn { width: 100%; padding: 0.75rem; font-size: 1rem; font-weight: 600; color: #fff; background: var(--primary); border: none; border-radius: var(--radius); cursor: pointer; transition: background var(--transition); }
+    form.content {
+      padding: 1rem;
+      background: var(--card-bg);
+      margin: 2rem auto 0;
+      display: grid;
+      gap: 0.5rem; /* مسافة متساوية بين الحقول */
+    }
+    label {
+      font-weight: 600;
+      display: block;
+      padding-right: 0.75rem;
+      margin-bottom: 0.125rem; /* مسافة مصغرة متناسقة بين التسمية ومربع الإدخال */
+    }
+    select, input[type="number"] {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: var(--radius);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    select:focus, input[type="number"]:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(34,207,207,0.2);
+    }
+    button#calcBtn {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      background: var(--primary);
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background var(--transition);
+    }
     button#calcBtn:hover { background: var(--primary-dark); }
-    #result { margin-top: 1rem; background: linear-gradient(to top left, #e6f5f3, #b8e5de); border-right: 0.5rem solid var(--primary); padding: 1rem; border-radius: var(--radius); box-shadow: 0 0.25rem 0.75rem var(--shadow); opacity: 0; transform: translateY(1rem); transition: opacity var(--transition), transform var(--transition); }
+    #result {
+      margin-top: 1rem;
+      background: linear-gradient(to top left, #e6f5f3, #b8e5de);
+      border-right: 0.5rem solid var(--primary);
+      padding: 1rem;
+      border-radius: var(--radius);
+      box-shadow: 0 0.25rem 0.75rem var(--shadow);
+      opacity: 0;
+      transform: translateY(1rem);
+      transition: opacity var(--transition), transform var(--transition);
+    }
     #result.show { opacity: 1; transform: translateY(0); }
     .order-button { display: block; margin-top: 1rem; padding: 0.75rem; text-align: center; background: var(--success); color: #fff; border-radius: var(--radius); font-weight: 600; text-decoration: none; transition: background var(--transition), transform 0.2s; }
     .order-button:hover { background: var(--success-dark); transform: scale(1.02); }
     .notes { font-size: 0.875rem; color: #666; margin-top: 0.5rem; margin-bottom: 1.5rem; }
     .notes p { margin-bottom: 0.125rem; }
-    footer.footer { background: var(--primary-dark); color: #fff; text-align: center; padding: 0.5rem 0; font-size: 0.75rem; position: fixed; bottom: 0; left: 0; width: 100%; }
+    footer.footer { background: var(--primary-dark); color: #fff; text-align: center; padding: 1rem 0 0.5rem; font-size: 0.75rem; position: fixed; bottom: 0; left: 0; width: 100%; }
     @media (max-width: 480px) { form.content { padding: 0.75rem; gap: 0.5rem; } .logo-container img { height: 2rem; } }
   </style>
 </head>
@@ -56,6 +99,19 @@
       const labelHeight = document.getElementById('labelHeight');
       const calcBtn = document.getElementById('calcBtn');
       const resultBox = document.getElementById('result');
+      // تحويل الأرقام العربية الهندية للإنجليزية
+      function normalizeDigits(str) {
+        const map = {'٠':'0','١':'1','٢':'2','٣':'3','٤':'4','٥':'5','٦':'6','٧':'7','٨':'8','٩':'9'};
+        return str.replace(/[٠-٩]/g, d => map[d]);
+      }
+      heightEl.addEventListener('input', e => {
+        const v = normalizeDigits(e.target.value);
+        e.target.value = v;
+      });
+      widthEl.addEventListener('input', e => {
+        const v = normalizeDigits(e.target.value);
+        e.target.value = v;
+      });
 
       function updateFields() {
         const shape = shapeEl.value;
@@ -71,54 +127,23 @@
           labelHeight.textContent = 'الطول (سم):';
           heightEl.placeholder = 'أدخل الطول';
         }
-        resultBox.classList.remove('show');
-        resultBox.innerHTML = '';
+        resultBox.classList.remove('show'); resultBox.innerHTML = '';
       }
-
       function onCalculate() {
-        resultBox.classList.remove('show');
-        resultBox.innerHTML = '';
-
-        const shape = shapeEl.value;
-        const h = parseFloat(heightEl.value);
-        const w = parseFloat(widthEl.value);
-        if (isNaN(h) || h <= 0 || (shape === 'مستطيل' && (isNaN(w) || w <= 0))) {
-          alert('يرجى إدخال قيم صحيحة موجبة.');
-          return;
-        }
-
-        const lengthM = h / 100;
-        const widthM = (shape === 'مستطيل' ? w : h) / 100;
-        const area = lengthM * widthM;
-
-        let priceValue;
-        if (shape === 'مستطيل' && w > 100) {
-          priceValue = area * 13500;
-        } else {
-          priceValue = lengthM * 13500;
-        }
-        const roundedPrice = Math.round(priceValue / 250) * 250;
-        const formattedPrice = roundedPrice.toLocaleString('en-US') + ' د.ع';
-        const priceHTML = `<p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formattedPrice}</p>`;
-
-        const thickness = 0.0025;
-        const density = 1250;
-        const weight = (area * thickness * density).toFixed(2);
-
-        const dimsText = shape === 'مستطيل' ? `${h} × ${w}` : `${h}`;
-        const msg = `مرحبا, اريد غطاء بقياس ${dimsText} بسعر ${formattedPrice}`;
-        const waLink = `https://wa.me/9647724522333?text=${encodeURIComponent(msg)}`;
-
-        resultBox.innerHTML =
-          `<p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${dimsText} سم</p>` +
-          priceHTML +
-          `<p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p>` +
-          `<p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p>` +
-          `<a href="${waLink}" target="_blank" class="order-button">اطلب الآن</a>`;
-
+        resultBox.classList.remove('show'); resultBox.innerHTML = '';
+        const shape = shapeEl.value; const h = parseFloat(heightEl.value); const w = parseFloat(widthEl.value);
+        if (isNaN(h) || h <= 0 || (shape === 'مستطيل' && (isNaN(w) || w <= 0))) { alert('يرجى إدخال قيم صحيحة موجبة.');return; }
+        const lengthM = h/100; const widthM=(shape==='مستطيل'?w:h)/100; const area=lengthM*widthM;
+        let priceValue = (shape==='مستطيل'&&w>100)?area*13500:lengthM*13500;
+        const roundedPrice=Math.round(priceValue/250)*250;const formattedPrice=roundedPrice.toLocaleString('en-US')+' د.ع';
+        const priceHTML=`<p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formattedPrice}</p>`;
+        const weight=(area*0.0025*1250).toFixed(2);
+        const dimsText=shape==='مستطيل'?`${h} × ${w}`:`${h}`;
+        const msg=`مرحبا, اريد غطاء بقياس ${dimsText} بسعر ${formattedPrice}`;
+        const waLink=`https://wa.me/9647724522333?text=${encodeURIComponent(msg)}`;
+        resultBox.innerHTML=`<p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${dimsText} سم</p>`+priceHTML+`<p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p>`+`<p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p>`+`<a href="${waLink}" target="_blank" class="order-button">اطلب الآن</a>`;
         resultBox.classList.add('show');
       }
-
       shapeEl.addEventListener('change', updateFields);
       calcBtn.addEventListener('click', onCalculate);
       updateFields();
