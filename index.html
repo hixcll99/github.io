@@ -3,283 +3,133 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>حساب سعر النايلون</title>
+  <title>حاسبة السعر والتفاصيل</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
   <style>
-    :root {
-      --primary: #22cfcf;
-      --primary-dark: #1bbaba;
-      --success: #28a745;
-      --success-dark: #218838;
-      --bg: #f0fafa;
-      --card-bg: #fff;
-      --text: #333;
-      --shadow: rgba(0,0,0,0.1);
-      --radius: 1rem;
-      --transition: 0.3s ease;
-      --font-family: 'IBM Plex Sans', sans-serif;
-    }
+    :root { --primary: #22cfcf; --primary-dark: #1bbaba; --success: #28a745; --success-dark: #218838; --bg: #f0fafa; --card-bg: #fff; --text: #333; --shadow: rgba(0,0,0,0.1); --radius: 1rem; --transition: 0.3s; --font-family: 'IBM Plex Sans', sans-serif; }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: var(--font-family);
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      padding: 1rem;
-    }
-    .container {
-      width: 100%;
-      max-width: 400px;
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: 0 0.5rem 1.25rem var(--shadow);
-      overflow: hidden;
-      animation: slideIn 0.5s ease;
-    }
-    header {
-      background: var(--primary);
-      padding: 1rem;
-      text-align: center;
-    }
-    header img {
-      height: 3rem;
-      filter: brightness(0) invert(1);
-      loading: lazy;
-    }
-    form.content {
-      padding: 2rem;
-      display: grid;
-      gap: 1rem;
-    }
-    label {
-      font-weight: 600;
-    }
-    select, input[type='number'] {
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: var(--radius);
-      transition: border-color var(--transition), box-shadow var(--transition);
-    }
-    select:focus, input[type='number']:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 4px rgba(34,207,207,0.2);
-      outline: none;
-    }
-    button {
-      position: relative;
-      overflow: hidden;
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #fff;
-      background: var(--primary);
-      border: none;
-      border-radius: var(--radius);
-      cursor: pointer;
-      transition: background var(--transition);
-    }
-    button:hover {
-      background: var(--primary-dark);
-    }
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    .ripple {
-      position: absolute;
-      border-radius: 50%;
-      transform: scale(0);
-      background: rgba(255,255,255,0.7);
-      animation: ripple 0.6s linear;
-    }
-    @keyframes ripple {
-      to { transform: scale(4); opacity: 0; }
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-1rem); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    #result {
-      background: linear-gradient(to top left, #e6f5f3, #b8e5de);
-      border-right: 0.5rem solid var(--primary);
-      padding: 1rem;
-      border-radius: var(--radius);
-      box-shadow: 0 0.25rem 0.75rem var(--shadow);
-      opacity: 0;
-      transform: translateY(1rem);
-      transition: opacity var(--transition), transform var(--transition);
-    }
-    #result.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    #result p {
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
-    }
-    .order-button {
-      display: block;
-      margin: 1rem 0 0;
-      padding: 0.75rem;
-      text-align: center;
-      text-decoration: none;
-      background: var(--success);
-      color: #fff;
-      border-radius: var(--radius);
-      font-weight: 600;
-      transition: background var(--transition), transform 0.2s;
-    }
-    .order-button:hover {
-      background: var(--success-dark);
-      transform: scale(1.02);
-    }
-    .notes {
-      font-size: 0.875rem;
-      color: #666;
-    }
-    .notes p {
-      margin-bottom: 0.25rem;
-    }
-    @media (max-width: 480px) {
-      body { padding: 0; }
-      .container { border-radius: 0; box-shadow: none; }
-      header img { height: 2.5rem; }
-    }
+    body { font-family: var(--font-family); background: var(--bg); color: var(--text); display: flex; justify-content: center; align-items: flex-start; padding: 2rem; }
+    .container { width: 100%; max-width: 400px; background: var(--card-bg); border-radius: var(--radius); box-shadow: 0 0.5rem 1.25rem var(--shadow); overflow: hidden; animation: slideIn 0.5s ease; }
+    header { position: relative; overflow: hidden; background: linear-gradient(45deg, var(--primary), var(--primary-dark)); background-size: 200% 200%; animation: gradientBG 6s linear infinite; padding: 1rem; text-align: center; }
+    header::before, header::after { content: ''; position: absolute; width: 120px; height: 120px; background: rgba(255,255,255,0.2); border-radius: 50%; }
+    header::before { top: -40px; left: -40px; animation: floatBG 8s ease-in-out infinite; }
+    header::after { bottom: -40px; right: -40px; animation: floatBG 8s ease-in-out infinite reverse; }
+    header .logo-container img { height: 3rem; filter: brightness(0) invert(1); animation: float 3s ease-in-out infinite; position: relative; z-index: 1; }
+    @keyframes gradientBG { 0%,100% { background-position:0% 50%; } 50% { background-position:100% 50%; } }
+    @keyframes float { 0%,100% { transform:translateY(0);} 50%{transform:translateY(-4px);} }
+    @keyframes floatBG { 0%,100%{transform:translate(0);} 50%{transform:translate(10px,10px);} }
+    @keyframes slideIn { from{opacity:0;transform:translateY(-1rem);} to{opacity:1;transform:translateY(0);} }
+    form.content { padding: 2rem; display: grid; gap: 1rem; }
+    label { font-weight: 600; }
+    select, input[type=number] { width: 100%; padding: 0.75rem; font-size: 1rem; border:1px solid #ccc; border-radius: var(--radius); transition: border-color var(--transition), box-shadow var(--transition); }
+    select:focus, input[type=number]:focus { outline:none; border-color:var(--primary); box-shadow:0 0 0 4px rgba(34,207,207,0.2); }
+    button { width:100%; padding:0.75rem; font-size:1rem; font-weight:600; color:#fff; background:var(--primary); border:none; border-radius:var(--radius); cursor:pointer; transition: background var(--transition); }
+    button:hover { background:var(--primary-dark); }
+    #result { margin-top:1rem; background:linear-gradient(to top left,#e6f5f3,#b8e5de); border-right:0.5rem solid var(--primary); padding:1rem; border-radius:var(--radius); box-shadow:0 0.25rem 0.75rem var(--shadow); opacity:0; transform:translateY(1rem); transition:opacity var(--transition),transform var(--transition); }
+    #result.show { opacity:1; transform:translateY(0); }
+    #result p { margin-bottom:0.5rem; line-height:1.4; }
+    .order-button { display:block; margin-top:1rem; padding:0.75rem; text-align:center; text-decoration:none; background:var(--success); color:#fff; border-radius:var(--radius); font-weight:600; transition:background var(--transition),transform 0.2s; }
+    .order-button:hover { background:var(--success-dark); transform:scale(1.02); }
+    .notes { font-size:0.875rem; color:#666; margin-top:1rem; }
+    .notes p { margin-bottom:0.25rem; }
+    footer.footer { background:var(--primary-dark); color:#fff; text-align:center; padding:0.75rem; font-size:0.875rem; }
+    @media(max-width:480px){body{padding:1rem;}header::before,header::after{display:none;}header .logo-container img{height:2.5rem;}container{border-radius:0;box-shadow:none;}}
   </style>
 </head>
 <body>
   <div class="container">
     <header>
-      <img src="https://i.ibb.co/hx8P56yc/image.png" alt="شعار الموقع">
+      <div class="logo-container"><img src="https://i.ibb.co/hx8P56yc/image.png" alt="شعار الموقع"></div>
     </header>
     <form class="content" novalidate>
-      <div>
-        <label for="shape">الشكل:</label>
-        <select id="shape" name="shape" required>
+      <div><label for="shape">الشكل:</label>
+        <select id="shape" required>
           <option value="مستطيل">مستطيل</option>
           <option value="مربع">مربع</option>
           <option value="دائري">دائري</option>
         </select>
       </div>
-      <div>
-        <label id="labelWidth" for="width">العرض (سم):</label>
-        <input type="number" id="width" name="width" placeholder="أدخل العرض" min="0.1" step="0.1" required>
-      </div>
       <div id="heightGroup">
         <label id="labelHeight" for="height">الطول (سم):</label>
-        <input type="number" id="height" name="height" placeholder="أدخل الطول" min="0.1" step="0.1" required>
+        <input type="number" id="height" placeholder="أدخل الطول" min="0.1" step="0.1" required>
       </div>
-      <button type="submit" id="calcBtn">احسب!</button>
+      <div id="widthGroup">
+        <label id="labelWidth" for="width">العرض (سم):</label>
+        <input type="number" id="width" placeholder="أدخل العرض" min="0.1" step="0.1" required>
+      </div>
+      <button type="button" id="calcBtn">احسب!</button>
       <div id="result" role="region" aria-live="polite"></div>
       <div class="notes">
         <p>• السعر لا يتضمّن رسوم التوصيل.</p>
         <p>• يُضاف هامش 3 سم إلى قياس الطول.</p>
       </div>
     </form>
+    <footer class="footer">
+      <p>© 2025 تركيبة - جميع الحقوق محفوظة</p>
+    </footer>
   </div>
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const shapeEl = document.getElementById('shape');
-      const widthEl = document.getElementById('width');
       const heightEl = document.getElementById('height');
+      const widthEl = document.getElementById('width');
       const heightGroup = document.getElementById('heightGroup');
-      const labelWidth = document.getElementById('labelWidth');
+      const widthGroup = document.getElementById('widthGroup');
       const labelHeight = document.getElementById('labelHeight');
-      const form = document.querySelector('form');
-      const btn = document.getElementById('calcBtn');
+      const calcBtn = document.getElementById('calcBtn');
       const resultBox = document.getElementById('result');
 
-      // ripple effect
-      btn.addEventListener('click', function(e) {
-        const circle = document.createElement('span');
-        const diameter = Math.max(this.clientWidth, this.clientHeight);
-        const radius = diameter / 2;
-        circle.style.width = circle.style.height = `${diameter}px`;
-        circle.style.left = `${e.clientX - this.offsetLeft - radius}px`;
-        circle.style.top = `${e.clientY - this.offsetTop - radius}px`;
-        circle.classList.add('ripple');
-        const ripple = this.getElementsByClassName('ripple')[0];
-        if (ripple) ripple.remove();
-        this.appendChild(circle);
-      });
-
       shapeEl.addEventListener('change', updateFields);
-      form.addEventListener('submit', onCalculate);
+      calcBtn.addEventListener('click', onCalculate);
+      updateFields();
 
       function updateFields() {
         const shape = shapeEl.value;
-        if (shape === 'مربع') {
-          labelWidth.textContent = 'طول الضلع (سم):';
-          widthEl.placeholder = 'أدخل طول الضلع';
-          heightGroup.style.display = 'none';
-          heightEl.removeAttribute('required');
-        } else if (shape === 'دائري') {
-          labelWidth.textContent = 'قطر الدائرة (سم):';
-          widthEl.placeholder = 'أدخل قطر الدائرة';
-          heightGroup.style.display = 'none';
-          heightEl.removeAttribute('required');
+        if (shape === 'مربع' || shape === 'دائري') {
+          widthGroup.style.display = 'none';
+          widthEl.removeAttribute('required');
+          labelHeight.textContent = shape==='مربع'? 'طول الضلع (سم):':'قطر الدائرة (سم):';
+          heightEl.placeholder = 'أدخل ' + (shape==='مربع'?'طول الضلع':'قطر الدائرة');
         } else {
-          labelWidth.textContent = 'العرض (سم):';
-          widthEl.placeholder = 'أدخل العرض';
-          heightGroup.style.display = 'block';
-          heightEl.setAttribute('required', '');
+          widthGroup.style.display = 'block';
+          widthEl.setAttribute('required','');
+          labelHeight.textContent = 'الطول (سم):';
+          heightEl.placeholder = 'أدخل الطول';
         }
       }
 
-      function onCalculate(e) {
-        e.preventDefault();
-        clearErrors();
+      function onCalculate() {
+        // clear previous
+        resultBox.classList.remove('show');
+        resultBox.innerHTML = '';
+
         const shape = shapeEl.value;
-        const width = parseFloat(widthEl.value);
-        const heightInput = parseFloat(heightEl.value);
-        if (isNaN(width) || width <= 0 || (shape === 'مستطيل' && (isNaN(heightInput) || heightInput <= 0))) {
-          showError('يرجى إدخال قيم صحيحة موجبة.');
+        const h = parseFloat(heightEl.value);
+        const w = parseFloat(widthEl.value);
+        if (isNaN(h) || h<=0 || (shape==='مستطيل' && (isNaN(w)||w<=0))) {
+          alert('يرجى إدخال قيم صحيحة موجبة.');
           return;
         }
-        const height = shape === 'مستطيل' ? heightInput : width;
-        const adjustedHeight = height + 3;
-        const meters = adjustedHeight / 100;
-        const pricePerMeter = 13500;
-        const totalPrice = meters * pricePerMeter;
-        const roundedPrice = Math.round(totalPrice / 250) * 250;
-        const formatted = roundedPrice.toLocaleString('en-US') + ' د.ع';
-        const weight = ((width/100) * (adjustedHeight/100)).toFixed(2);
-        const message = encodeURIComponent(`مرحبا, اريد غطاء بقياس ${width}×${height} بسعر ${formatted}`);
-        const waLink = `https://wa.me/9647724522333?text=${message}`;
+        const meters = h/100;
+        const totalPrice = meters*13500;
+        const roundedPrice = Math.round(totalPrice/250)*250;
+        const formatted = roundedPrice.toLocaleString('en-US')+' د.ع';
+        const weight = ((shape==='مستطيل'?w:h)/100 * (h/100)).toFixed(2);
+        const msg = encodeURIComponent(`مرحبا, اريد غطاء بقياس ${h}×${shape==='مستطيل'?w:h} بسعر ${formatted}`);
+        const waLink = `https://wa.me/9647724522333?text=${msg}`;
 
         resultBox.innerHTML = `
-          <p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${width} × ${height} سم</p>
+          <p><i class="fa-solid fa-ruler"></i> <strong>القياس:</strong> ${h} × ${shape==='مستطيل'?w:h} سم</p>
           <p><i class="fa-solid fa-money-bill-wave"></i> <strong>السعر:</strong> ${formatted}</p>
           <p><i class="fa-solid fa-weight-hanging"></i> <strong>الوزن:</strong> ${weight} كغم</p>
           <p><i class="fa-solid fa-arrows-v"></i> <strong>السُمك:</strong> 2.5 ملم</p>
-          <a href="${waLink}" target="_blank" rel="noopener" class="order-button">اطلب الآن</a>
+          <a href="${waLink}" target="_blank" class="order-button">اطلب الآن</a>
         `;
-        requestAnimationFrame(() => resultBox.classList.add('show'));
-        resultBox.scrollIntoView({ behavior: 'smooth' });
+        resultBox.classList.add('show');
       }
-
-      function showError(msg) {
-        const err = document.createElement('div');
-        err.className = 'error';
-        err.textContent = msg;
-        form.prepend(err);
-      }
-
-      function clearErrors() {
-        const prev = form.querySelector('.error');
-        if (prev) prev.remove();
-      }
-
-      updateFields();
     });
   </script>
 </body>
