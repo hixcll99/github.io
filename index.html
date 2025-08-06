@@ -72,7 +72,22 @@
     .order-button:hover { background: var(--success-dark); transform: scale(1.02); }
     .notes { font-size: 0.875rem; color: #666; margin-top: 0.5rem; margin-bottom: 1.5rem; }
     .notes p { margin-bottom: 0.125rem; }
-    footer.footer { background: var(--primary-dark); color: #fff; text-align: center; padding: 1rem 0 0.5rem; font-size: 0.75rem; position: fixed; bottom: 0; left: 0; width: 100%; }
+    footer.footer {
+      background: var(--primary-dark);
+      color: #fff;
+      text-align: center;
+      /* رفع النص لأعلى وضبط التباعد */
+      padding: 0.5rem 0 0.25rem;
+      height: auto;
+      font-size: 0.75rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+    }
+    footer.footer p {
+      margin: 0;
+    }
     @media (max-width: 480px) { form.content { padding: 0.75rem; gap: 0.5rem; } .logo-container img { height: 2rem; } }
   </style>
 </head>
