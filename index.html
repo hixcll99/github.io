@@ -8,92 +8,84 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
   <style>
     :root{
-      --primary:#1fbdbd;
-      --primary-700:#159b9b;
+      --primary:#18dcd8;
+      --primary-700:#12b7b4;
       --success:#2fbf71;
       --success-700:#259c5d;
-      --bg-1:#f6fbfb;
       --text:#1f2a2e;
-      --radius:18px;
-      --radius-lg:22px;
-      --shadow-md:0 8px 24px rgba(0,0,0,.08);
-      --ring:0 0 0 3px rgba(31,189,189,.18);
+      --radius:14px;
+      --radius-lg:18px;
     }
 
     *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
 
     body{
-      margin:0;
-      padding:0;
       font-family:'IBM Plex Sans',sans-serif;
-      background:var(--bg-1);
       color:var(--text);
+      background:#ffffff;
       min-height:100vh;
     }
 
-    /* تغليف عام */
-    .wrap{
-      width:100%;
-      max-width:100%;
-      padding:0 0 40px;
-      margin:0 auto;
-    }
+    .wrap{ background:#ffffff; }
 
-    /* الهيدر القديم الجميل */
+    /* الهيدر */
     header.site-head{
-      background:linear-gradient(90deg,var(--primary),var(--primary-700));
-      border-radius:var(--radius-lg);
-      box-shadow:var(--shadow-md);
-      height:78px;
+      width:100%;
       padding:0 18px;
+      background:linear-gradient(90deg,var(--primary),var(--primary-700));
+      height:60px;
       display:flex;
       align-items:center;
       justify-content:center;
-      overflow:hidden;
-      width:94%;
-      max-width:840px;
-      margin:16px auto 0;
+      box-shadow:0 2px 4px rgba(0,0,0,.08);
     }
 
     .logo img{
-      height:110px;
+      height:70px;
+      transform:scale(1.28);
+      transform-origin:center;
       object-fit:contain;
       display:block;
     }
 
-    /* الكارد */
     .card{
-      background:#fff;
-      border-radius:var(--radius-lg);
-      box-shadow:var(--shadow-md);
-      margin:16px auto;
-      width:94%;
-      max-width:840px;
-      overflow:hidden;
+      width:100%;
+      max-width:480px;
+      margin:18px auto 0;
     }
 
     .card-head{
-      padding:16px 18px;
-      border-bottom:1px solid #eef3f3;
-      background:#ffffff;
+      padding:16px 18px 6px;
+      text-align:center;
+      background:#fff;
     }
 
     .card-head-main{
       font-weight:700;
-      font-size:1rem;
+      font-size:.98rem;
       color:#0e3f3f;
       display:flex;
-      align-items:center;
       gap:8px;
+      justify-content:center;
+      align-items:center;
+    }
+
+    .title-divider{
+      width:100%;
+      max-width:480px;
+      margin:10px auto 18px;
+      height:1px;
+      background:linear-gradient(to right, transparent, var(--primary), transparent);
+      border-radius:50px;
     }
 
     form.content{
-      padding:18px;
+      padding:16px 18px 18px;
       display:grid;
       gap:14px;
     }
@@ -104,149 +96,201 @@
       grid-template-columns:1fr;
     }
     @media(min-width:640px){
-      .grid{grid-template-columns:1fr 1fr;}
+      .grid{ grid-template-columns:1fr 1fr; }
     }
 
     label{
       font-weight:600;
+      font-size:.95rem;
       margin-bottom:6px;
-      color:#123;
       display:block;
+      color:#123;
     }
 
-    input,select{
+    select,input[type="number"]{
       width:100%;
       padding:12px 14px;
       font-size:1rem;
       border:1px solid #d9e5e6;
       border-radius:var(--radius);
       background:#fff;
+
+      /* إخفاء سهم المتصفح الافتراضي */
+      -webkit-appearance:none;
+      -moz-appearance:none;
+      appearance:none;
+      background-image:none;
     }
 
-    input:focus,select:focus{
-      outline:none;
-      border-color:var(--primary);
-      box-shadow:var(--ring);
+    .select-wrap{
+      position:relative;
     }
 
-    .select-wrap{position:relative;}
-    .select-wrap select{padding-right:40px;}
-    .select-icon{
+    /* مسافة مناسبة بين النص والسهم */
+    .select-wrap select{
+      padding-right:32px;
+    }
+
+    .select-wrap .select-icon{
       position:absolute;
-      right:12px;
+      right:10px;
       top:50%;
       transform:translateY(-50%);
       color:var(--primary);
-      opacity:.9;
+      font-size:1.1rem;
+      pointer-events:none; /* حتى ما يمنع الضغط على السلكت */
     }
 
-    /* زر احسب */
     #calcBtn{
       width:100%;
       padding:12px 16px;
-      background:linear-gradient(180deg,var(--primary),var(--primary-700));
-      color:#fff;
       border:none;
       border-radius:var(--radius);
-      font-size:1.18rem;
+      background:linear-gradient(180deg,var(--primary),var(--primary-700));
+      color:#fff;
       font-weight:800;
+      font-size:1.1rem;
       cursor:pointer;
-      box-shadow:0 6px 14px rgba(21,155,155,.25);
+      box-shadow:0 6px 14px rgba(18,220,216,.25);
     }
 
-    /* النتيجة */
     #result{
-      margin-top:8px;
-      padding:16px;
+      margin-top:18px;
+      padding:14px 14px 16px;
       border-radius:var(--radius-lg);
-      background:#ffffffd0;
-      border:1px solid rgba(0,0,0,.06);
+      background:rgba(255,255,255,.6);
+      border:1px solid rgba(24,220,216,.22);
       box-shadow:0 12px 30px rgba(0,0,0,.08);
       display:none;
     }
-    #result.show{display:block;}
+    #result.show{ display:block; }
 
     #result .row{
       display:flex;
       align-items:center;
-      gap:10px;
-      padding:10px 0;
+      justify-content:space-between;
+      padding:8px 0;
       border-bottom:1px dashed rgba(0,0,0,.06);
+      gap:10px;
     }
-    #result .row:last-child{border-bottom:none;}
+    #result .row:last-child{ border-bottom:none; }
 
-    #result .label{font-weight:700;}
+    #result .row-main{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    #result i{
+      color:var(--primary);
+      width:20px;
+      text-align:center;
+    }
+
+    #result .label{
+      font-weight:700;
+      color:#0e3f3f;
+    }
+
     #result .value{
-      margin-inline-start:auto;
       font-weight:400;
+      color:#133;
+      display:flex;
+      align-items:center;
+      direction:rtl;
+      text-align:left;
+    }
+
+    #result .value .num{
+      direction:ltr;
+      unicode-bidi:embed;
+    }
+
+    #result .value .unit{
+      margin-right:6px;
+      white-space:nowrap;
     }
 
     .order-button{
-      margin-top:14px;
-      padding:12px 16px;
-      width:100%;
       display:flex;
-      justify-content:center;
       align-items:center;
+      justify-content:center;
+      width:100%;
+      margin-top:12px;
+      padding:11px 16px;
+      border-radius:calc(var(--radius) + 4px);
       text-decoration:none;
+      font-weight:800;
+      font-size:1.05rem;
       color:#fff;
       background:linear-gradient(180deg,var(--success),var(--success-700));
-      border-radius:var(--radius);
-      font-size:1.18rem;
-      font-weight:800;
-      box-shadow:0 10px 24px rgba(37,156,93,.3);
+      box-shadow:0 10px 24px rgba(37,156,93,.26);
     }
 
-    /* الملاحظات */
-    .notes{
-      width:94%;
-      max-width:840px;
-      margin:18px auto;
-      padding:18px 0 0;
+    .section-divider{
+      width:100%;
+      max-width:480px;
+      margin:25px auto;
+      height:1px;
+      background:linear-gradient(to right, transparent, var(--primary), transparent);
       position:relative;
     }
-    .notes::before{
+    .section-divider::after{
       content:"";
-      height:1px;
-      width:100%;
-      background:#ddd;
       position:absolute;
-      top:0;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%) rotate(45deg);
+      width:10px;
+      height:10px;
+      background:var(--primary);
+    }
+
+    .notes{
+      width:100%;
+      max-width:480px;
+      margin:0 auto 24px;
+      padding:0 18px;
+      font-size:.85rem;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
     }
 
     .note-row{
       display:flex;
-      gap:12px;
-      padding:10px 0;
+      gap:8px;
+      align-items:flex-start;
       line-height:1.6;
     }
+
     .note-icon{
-      width:32px;height:32px;
+      width:24px;
+      height:24px;
       border-radius:50%;
-      background:rgba(31,189,189,.15);
-      color:var(--primary);
+      background:rgba(24,220,216,.12);
       display:flex;
       align-items:center;
       justify-content:center;
+      color:var(--primary);
+      font-size:.8rem;
     }
 
-    .note-title{font-weight:800;}
-    .highlight-number{font-weight:400;color:#000;}
-
+    .note-title{ font-weight:800; }
+    .highlight-number{ color:#000; }
   </style>
 </head>
 
 <body>
+
   <div class="wrap">
 
-    <!-- الهيدر -->
     <header class="site-head">
       <div class="logo">
         <img src="https://cdn.imgpile.com/f/nQ5XZuf_xl.png" alt="Logo">
       </div>
     </header>
 
-    <!-- الكارد -->
     <section class="card">
 
       <div class="card-head">
@@ -256,9 +300,11 @@
         </div>
       </div>
 
-      <form class="content" novalidate>
-        <div class="grid">
+      <div class="title-divider"></div>
 
+      <form class="content" novalidate>
+
+        <div class="grid">
           <div class="field">
             <label>الشكل</label>
             <div class="select-wrap">
@@ -273,46 +319,47 @@
 
           <div class="field" id="heightGroup">
             <label id="labelHeight">الطول (سم)</label>
-            <input type="number" id="height" placeholder="ادخل الطول بالسنتيمتر" min="1" />
+            <input type="number" id="height" placeholder='ادخل الطول "بالسنتيمتر"' min="1"/>
           </div>
 
           <div class="field" id="widthGroup">
             <label>العرض (سم)</label>
-            <input type="number" id="width" placeholder="ادخل العرض بالسنتيمتر" min="1" />
+            <input type="number" id="width" placeholder='ادخل العرض "بالسنتيمتر"' min="1"/>
           </div>
-
         </div>
 
         <button type="button" id="calcBtn">احسب</button>
-
         <div id="result"></div>
 
       </form>
 
-      <div class="notes">
-        <div class="note-row">
-          <div class="note-icon"><i class="fa-solid fa-truck"></i></div>
-          <span>
-            <span class="note-title">سعر التوصيل:</span>
-            بغداد <span class="highlight-number">5,000</span> |
-            المحافظات <span class="highlight-number">6,000</span>
-          </span>
-        </div>
+    </section>
 
-        <div class="note-row">
-          <div class="note-icon"><i class="fa-solid fa-maximize"></i></div>
-          <span>
-            <span class="note-title">زيادة بالطول:</span>
-            يُضاف هامش <span class="highlight-number">3 سم</span> إلى قياس الطول.
-          </span>
-        </div>
+    <div class="section-divider"></div>
 
+    <div class="notes">
+
+      <div class="note-row">
+        <div class="note-icon"><i class="fa-solid fa-truck"></i></div>
+        <span>
+          <span class="note-title">سعر التوصيل:</span>
+          بغداد <span class="highlight-number">5,000</span> |
+          المحافظات <span class="highlight-number">6,000</span>
+        </span>
       </div>
 
-    </section>
+      <div class="note-row">
+        <div class="note-icon"><i class="fa-solid fa-maximize"></i></div>
+        <span>
+          <span class="note-title">زيادة بالطول:</span>
+          يُضاف هامش <span class="highlight-number">3 سم</span> إلى قياس الطول.
+        </span>
+      </div>
+
+    </div>
+
   </div>
 
-  <!-- الجافاسكربت -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
 
@@ -320,9 +367,9 @@
       const ROUND_STEP = 250;
       const WA_NUMBER = "9647724522333";
 
-      const shapeEl = document.getElementById("shape");
+      const shapeEl  = document.getElementById("shape");
       const heightEl = document.getElementById("height");
-      const widthEl = document.getElementById("width");
+      const widthEl  = document.getElementById("width");
       const widthGrp = document.getElementById("widthGroup");
       const labelHeight = document.getElementById("labelHeight");
       const resultBox = document.getElementById("result");
@@ -330,6 +377,7 @@
       function clean(el){
         el.addEventListener("input",()=>{
           el.value = el.value.replace(/[^0-9]/g,"");
+          if(el.value !== "" && Number(el.value) < 1) el.value = "1";
         });
       }
       clean(heightEl);
@@ -337,19 +385,26 @@
 
       function updateFields(){
         const shape = shapeEl.value;
-        resultBox.style.display="none";
+        resultBox.classList.remove("show");
+        resultBox.innerHTML = "";
 
         if(shape === "مستطيل"){
-          widthGrp.style.display = "block";
+          widthGrp.style.display = "";
           labelHeight.textContent = "الطول (سم)";
-        }
-        else if(shape === "مربع"){
+          heightEl.placeholder = 'ادخل الطول "بالسنتيمتر"';
+          widthEl.placeholder  = 'ادخل العرض "بالسنتيمتر"';
+
+        }else if(shape === "مربع"){
           widthGrp.style.display = "none";
+          widthEl.value = "";
           labelHeight.textContent = "طول الضلع (سم)";
-        }
-        else{
+          heightEl.placeholder = 'ادخل طول الضلع "بالسنتيمتر"';
+
+        }else if(shape === "دائري"){
           widthGrp.style.display = "none";
+          widthEl.value = "";
           labelHeight.textContent = "قطر الدائرة (سم)";
+          heightEl.placeholder = 'ادخل قطر الدائرة "بالسنتيمتر"';
         }
       }
 
@@ -358,21 +413,24 @@
       function computeArea(shape,h,w){
         const hM = h/100;
         if(shape==="مستطيل") return hM*(w/100);
-        if(shape==="مربع")   return hM*hM;
-        if(shape==="دائري"){
-          const r = hM/2;
-          return Math.PI*r*r;
-        }
+        if(shape==="مربع") return hM*hM;
+        if(shape==="دائري"){ const r=hM/2; return Math.PI*r*r; }
         return 0;
       }
 
       function computePrice(shape,h,w){
-        return computeArea(shape,h,w) * PRICE_PER_UNIT;
+        const hM = h/100;
+        if(shape==="مستطيل" && w<=100) return hM*PRICE_PER_UNIT;
+        if(shape==="دائري"){
+          if(h<=100) return hM*PRICE_PER_UNIT;
+          return (h/100)*(h/100)*PRICE_PER_UNIT;
+        }
+        return computeArea(shape,h,w)*PRICE_PER_UNIT;
       }
 
       function fmt(n){
         const r = Math.round(n/ROUND_STEP)*ROUND_STEP;
-        return r.toLocaleString("en-US")+" د.ع";
+        return r.toLocaleString("en-US");
       }
 
       document.getElementById("calcBtn").addEventListener("click",()=>{
@@ -380,46 +438,68 @@
         const h = Number(heightEl.value);
         const w = Number(widthEl.value);
 
-        if(!h || (shape==="مستطيل" && !w)){
-          alert("يرجى إدخال قيم صحيحة");
+        if(!h || h<=0 || (shape==="مستطيل" && (!w || w<=0))){
+          alert("يرجى إدخال قيم صحيحة.");
           return;
         }
 
         const price = computePrice(shape,h,w);
-        const area  = computeArea(shape,h,w);
+        const area = computeArea(shape,h,w);
         const weight = (area*0.0025*1250).toFixed(2);
 
-        let dimsText =
-          shape==="مستطيل" ? `${h} × ${w}` :
-          shape==="مربع"   ? `${h} × ${h}` :
-                            `${h}`;
+        let dimsText;
+        if(shape==="مستطيل") dimsText=`${h} × ${w}`;
+        else if(shape==="مربع") dimsText=`${h} × ${h}`;
+        else dimsText=`${h}`;
 
-        const msg = encodeURIComponent(`مرحبا، أريد غطاء ${shape} بقياس ${dimsText} سم بسعر ${fmt(price)}`);
+        const msg = encodeURIComponent(
+          `مرحبا، أريد غطاء ${shape} بقياس ${dimsText} سم بسعر ${fmt(price)} د.ع`
+        );
         const waLink = `https://wa.me/${WA_NUMBER}?text=${msg}`;
 
         resultBox.innerHTML = `
           <div class="row">
-            <i class="fa-solid fa-money-bill-wave"></i>
-            <div class="label">السعر</div>
-            <div class="value">${fmt(price)}</div>
+            <div class="row-main">
+              <i class="fa-solid fa-money-bill-wave"></i>
+              <div class="label">السعر</div>
+            </div>
+            <div class="value">
+              <span class="num">${fmt(price)}</span>
+              <span class="unit">د.ع</span>
+            </div>
           </div>
 
           <div class="row">
-            <i class="fa-solid fa-ruler"></i>
-            <div class="label">القياس</div>
-            <div class="value">${dimsText} سم</div>
+            <div class="row-main">
+              <i class="fa-solid fa-ruler"></i>
+              <div class="label">القياس</div>
+            </div>
+            <div class="value">
+              <span class="num">${dimsText}</span>
+              <span class="unit">سم</span>
+            </div>
           </div>
 
           <div class="row">
-            <i class="fa-solid fa-weight-hanging"></i>
-            <div class="label">الوزن</div>
-            <div class="value">${weight} كغم</div>
+            <div class="row-main">
+              <i class="fa-solid fa-weight-hanging"></i>
+              <div class="label">الوزن</div>
+            </div>
+            <div class="value">
+              <span class="num">${weight}</span>
+              <span class="unit">كغم</span>
+            </div>
           </div>
 
           <div class="row">
-            <i class="fa-solid fa-arrows-v"></i>
-            <div class="label">السُمك</div>
-            <div class="value">2.5 ملم</div>
+            <div class="row-main">
+              <i class="fa-solid fa-arrows-v"></i>
+              <div class="label">السُمك</div>
+            </div>
+            <div class="value">
+              <span class="num">2.5</span>
+              <span class="unit">ملم</span>
+            </div>
           </div>
 
           <a class="order-button" href="${waLink}" target="_blank">
