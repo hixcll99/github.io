@@ -509,6 +509,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const shape = shapeEl.value;
     const h = Number(heightEl.value);
     const w = Number(widthEl.value);
+    
+    // 🔥 منع العرض يكون أكبر من الطول
+    if (shape === "مستطيل" && w > h) {
+      alert("⚠️ لا يمكن أن يكون العرض أكبر من الطول. يرجى تعديل القياسات.");
+      widthEl.value = "";
+      widthEl.focus();
+      return; // يوقف العملية وما يكمل الحساب
+    }
 
     if(!h || h<=0 || (shape==="مستطيل" && (!w || w<=0))){
       alert("يرجى إدخال قيم صحيحة.");
