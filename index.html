@@ -415,8 +415,8 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const PRICE_PER_UNIT = 14750;
-  const ROUND_STEP = 250;
+  const PRICE_PER_UNIT = 13500;
+  const EXTRA_CM_FOR_PRICING = 3;
   const WA_NUMBER = "9647724522333";
 
   const MAX_H_CM = 2000;
@@ -436,7 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     gtag("event", "button_click", {
       event_category: "button",
-      event_label: labelText,   // هنا تكدر تتبع "احسب" أو "اطلب الآن"
+      event_label: labelText,
       button_text: labelText,
       value: 1
     });
@@ -456,6 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const shape = shapeEl.value;
     resultBox.classList.remove("show");
     resultBox.innerHTML = "";
+    resultBox.dataset.copyText = "";
 
     if(shape === "مستطيل"){
       widthGrp.style.display = "";
@@ -491,31 +492,88 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function computePrice(shape,h,w){
-    const hM = h/100;
-    if(shape==="مستطيل" && w<=100) return hM*PRICE_PER_UNIT;
+    const adjustedH = h + EXTRA_CM_FOR_PRICING;
+    const adjustedHM = adjustedH / 100;
+
+    if(shape==="مستطيل" && w<=100) return adjustedHM * PRICE_PER_UNIT;
     if(shape==="دائري"){
-      if(h<=100) return hM*PRICE_PER_UNIT;
-      return (h/100)*(h/100)*PRICE_PER_UNIT;
+      if(h<=100) return adjustedHM * PRICE_PER_UNIT;
+      return (adjustedH / 100) * (adjustedH / 100) * PRICE_PER_UNIT;
     }
-    return computeArea(shape,h,w)*PRICE_PER_UNIT;
+    return computeArea(shape, adjustedH, w) * PRICE_PER_UNIT;
+  }
+
+  function roundPriceToNearest500(price){
+    const base = Math.floor(price / 1000) * 1000;
+    const remainder = price - base;
+
+    if (remainder <= 249) return base;
+    if (remainder <= 749) return base + 500;
+    return base + 1000;
   }
 
   function fmt(n){
-    const r = Math.round(n/ROUND_STEP)*ROUND_STEP;
-    return r.toLocaleString("en-US");
+    return roundPriceToNearest500(n).toLocaleString("en-US");
   }
+
+  function formatPriceText(price){
+    const rounded = roundPriceToNearest500(price);
+    const thousands = Math.floor(rounded / 1000);
+    const remainder = rounded % 1000;
+
+    if (rounded < 1000) return `${rounded} د.ع`;
+    if (remainder === 0) return `${thousands} ألف د.ع`;
+    if (remainder === 500) return `${thousands} ألف ونصف د.ع`;
+    return `${rounded.toLocaleString("en-US")} د.ع`;
+  }
+
+  function formatWeightText(weight){
+    const roundedToHalf = Math.round(weight * 2) / 2;
+    const whole = Math.floor(roundedToHalf);
+    const fraction = roundedToHalf - whole;
+
+    if (roundedToHalf === 0.5) return "نصف كيلوغرام";
+    if (fraction === 0) return `${whole} كيلوغرام`;
+    if (fraction === 0.5) return `${whole} كيلو ونصف`;
+    return `${roundedToHalf} كيلوغرام`;
+  }
+
+  async function copyTextToClipboard(text){
+    try{
+      await navigator.clipboard.writeText(text);
+    }catch(err){
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+    }
+  }
+
+  resultBox.addEventListener("click", async (e) => {
+    if(!resultBox.classList.contains("show")) return;
+    if(e.target.closest(".order-button")) return;
+
+    const copyText = resultBox.dataset.copyText || "";
+    if(!copyText) return;
+
+    await copyTextToClipboard(copyText);
+  });
 
   calcBtn.addEventListener("click", ()=>{
     const shape = shapeEl.value;
     const h = Number(heightEl.value);
     const w = Number(widthEl.value);
-    
-    // 🔥 منع العرض يكون أكبر من الطول
+
     if (shape === "مستطيل" && w > h) {
       alert("⚠️ لا يمكن أن يكون العرض أكبر من الطول. يرجى تعديل القياسات.");
       widthEl.value = "";
       widthEl.focus();
-      return; // يوقف العملية وما يكمل الحساب
+      return;
     }
 
     if(!h || h<=0 || (shape==="مستطيل" && (!w || w<=0))){
@@ -533,7 +591,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    // تتبع زر "احسب"
     trackButtonEvent("احسب");
 
     const price = computePrice(shape,h,w);
@@ -601,9 +658,11 @@ document.addEventListener("DOMContentLoaded", () => {
       </a>
     `;
 
+    resultBox.dataset.copyText = `السعر مع التوصيل: ${formatPriceText(price)}
+وزن القياس ${dimsText}: ${formatWeightText(Number(weight))}`;
+
     resultBox.classList.add("show");
 
-    // تتبع زر "اطلب الآن" (يتولد بعد الحساب)
     const orderBtn = resultBox.querySelector(".order-button");
     if (orderBtn) {
       orderBtn.addEventListener("click", function() {
@@ -612,7 +671,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // استدعاء مبدئي لضبط الحقول حسب الشكل الافتراضي
   updateFields();
 });
 </script>
