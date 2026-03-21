@@ -10,14 +10,11 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
-  <!-- Google tag (gtag.js) - Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MR5JHB74D0"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
-    // الإعداد الأساسي للحساب مالك
     gtag('config', 'G-MR5JHB74D0');
   </script>
 
@@ -187,7 +184,7 @@
       font-size:1.1rem;
       cursor:pointer;
       box-shadow:0 6px 14px rgba(18,220,216,.25);
-      font-family: 'IBM Plex Sans Arabic', sans-serif;
+      font-family:'IBM Plex Sans Arabic', sans-serif;
     }
 
     #result{
@@ -198,6 +195,7 @@
       background:rgba(255,255,255,.6);
       box-shadow:0 12px 30px rgba(0,0,0,.08);
       display:none;
+      cursor:pointer;
     }
 
     #result.show{
@@ -219,19 +217,36 @@
 
     #result .row-main{
       display:flex;
-      align-items:center;
+      align-items:flex-start;
       gap:6px;
+    }
+
+    #result .label-wrap{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:2px;
     }
 
     #result i{
       color:var(--primary);
       width:20px;
       text-align:center;
+      margin-top:2px;
     }
 
     #result .label{
       font-weight:700;
       color:#0e3f3f;
+      line-height:1.2;
+    }
+
+    #result .label-sub{
+      font-size:.66rem;
+      font-weight:500;
+      color:#7a8c90;
+      line-height:1.1;
+      letter-spacing:0;
     }
 
     #result .value{
@@ -294,40 +309,40 @@
       max-width:480px;
       margin:0 auto 24px;
       padding:0 18px;
-      font-size:.70rem;
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      opacity:.9;
     }
 
-    .note-row{
+    .info-note{
       display:flex;
+      align-items:center;
       gap:8px;
-      align-items:flex-start;
-      line-height:1.6;
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(24,220,216,.05);
+      border:1px solid rgba(24,220,216,.12);
     }
 
-    .note-icon{
-      width:24px;
-      height:24px;
-      background:rgba(24,220,216,.10);
-      border-radius:50%;
+    .info-note-icon{
+      width:20px;
+      min-width:20px;
+      text-align:center;
+      color:rgba(24,220,216,.85);
+      font-size:.82rem;
       display:flex;
       align-items:center;
       justify-content:center;
-      color:rgba(24,220,216,.7);
-      font-size:.8rem;
     }
 
-    .note-row span{
-      opacity:.96;
+    .info-note-text{
+      margin:0;
+      font-size:.72rem;
+      line-height:1.7;
+      color:#6b7b80;
     }
 
-    .note-title{
-      font-weight:800;
+    .info-note-text .note-title{
+      font-weight:700;
+      color:#4f666a;
     }
-
   </style>
 </head>
 
@@ -387,36 +402,29 @@
 
   </section>
 
-  <div class="section-divider">
-  </div>
+  <div class="section-divider"></div>
 
   <div class="notes">
-
-    <div class="note-row">
-      <div class="note-icon"><i class="fa-solid fa-truck"></i></div>
-      <span>
-        <span class="note-title">سعر التوصيل:</span>
-        بغداد <span class="highlight-number">5,000</span> | الــــــــمحافظات <span class="highlight-number">6,000</span>
-      </span>
-    </div>
-
-    <div class="note-row">
-      <div class="note-icon"><i class="fa-solid fa-maximize"></i></div>
-      <span>
+    <div class="info-note">
+      <div class="info-note-icon">
+        <i class="fa-solid fa-maximize"></i>
+      </div>
+      <p class="info-note-text">
         <span class="note-title">زيادة بالطول:</span>
-        يُضاف هامش <span class="highlight-number">3 سم</span> إلى قياس الطول.
-      </span>
+        يُضاف هامش 3 سم إلى قياس الطول.
+      </p>
     </div>
-
   </div>
-
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  const PRICE_PER_UNIT = 13500;
+  const RATE_UP_TO_100 = 13500;
+  const RATE_100_TO_120 = 16200;
+  const RATE_120_TO_150 = 20250;
   const EXTRA_CM_FOR_PRICING = 3;
+  const DELIVERY_INCLUDED_FEE = 5000;
   const WA_NUMBER = "9647724522333";
 
   const MAX_H_CM = 2000;
@@ -430,10 +438,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const resultBox = document.getElementById("result");
   const calcBtn = document.getElementById("calcBtn");
 
-  // دالة إرسال حدث للأزرار إلى Google Analytics
   function trackButtonEvent(labelText) {
     if (typeof gtag !== "function") return;
-
     gtag("event", "button_click", {
       event_category: "button",
       event_label: labelText,
@@ -463,7 +469,6 @@ document.addEventListener("DOMContentLoaded", () => {
       labelHeight.textContent = "الطول (سم)";
       heightEl.placeholder = "ادخل الطول بالسنتيمتر";
       widthEl.placeholder  = "ادخل العرض بالسنتيمتر";
-
     }else{
       widthGrp.style.display = "none";
       widthEl.value = "";
@@ -484,23 +489,34 @@ document.addEventListener("DOMContentLoaded", () => {
     const hM = h/100;
     if(shape==="مستطيل") return hM*(w/100);
     if(shape==="مربع") return hM*hM;
-    if(shape==="دائري"){
-      const r = hM/2;
-      return Math.PI*r*r;
-    }
+    if(shape==="دائري") return Math.PI*(hM/2)**2;
     return 0;
   }
 
-  function computePrice(shape,h,w){
-    const adjustedH = h + EXTRA_CM_FOR_PRICING;
-    const adjustedHM = adjustedH / 100;
+  function getLinearRateByWidth(widthCm){
+    if(widthCm <= 100) return RATE_UP_TO_100;
+    if(widthCm <= 120) return RATE_100_TO_120;
+    if(widthCm <= 150) return RATE_120_TO_150;
+    return null;
+  }
 
-    if(shape==="مستطيل" && w<=100) return adjustedHM * PRICE_PER_UNIT;
-    if(shape==="دائري"){
-      if(h<=100) return adjustedHM * PRICE_PER_UNIT;
-      return (adjustedH / 100) * (adjustedH / 100) * PRICE_PER_UNIT;
+  function computePrice(shape,h,w){
+    let effectiveWidth = w;
+    let effectiveLength = h + EXTRA_CM_FOR_PRICING;
+
+    if(shape === "مربع"){
+      effectiveWidth = h;
     }
-    return computeArea(shape, adjustedH, w) * PRICE_PER_UNIT;
+
+    if(shape === "دائري"){
+      effectiveWidth = h;
+      effectiveLength = h;
+    }
+
+    const selectedRate = getLinearRateByWidth(effectiveWidth);
+    if(selectedRate === null) return null;
+
+    return (effectiveLength / 100) * selectedRate;
   }
 
   function roundPriceToNearest500(price){
@@ -516,26 +532,15 @@ document.addEventListener("DOMContentLoaded", () => {
     return roundPriceToNearest500(n).toLocaleString("en-US");
   }
 
-  function formatPriceText(price){
+  function formatPriceTextForCopy(price){
     const rounded = roundPriceToNearest500(price);
     const thousands = Math.floor(rounded / 1000);
     const remainder = rounded % 1000;
 
-    if (rounded < 1000) return `${rounded} د.ع`;
-    if (remainder === 0) return `${thousands} ألف د.ع`;
-    if (remainder === 500) return `${thousands} ألف ونصف د.ع`;
-    return `${rounded.toLocaleString("en-US")} د.ع`;
-  }
-
-  function formatWeightText(weight){
-    const roundedToHalf = Math.round(weight * 2) / 2;
-    const whole = Math.floor(roundedToHalf);
-    const fraction = roundedToHalf - whole;
-
-    if (roundedToHalf === 0.5) return "نصف كيلوغرام";
-    if (fraction === 0) return `${whole} كيلوغرام`;
-    if (fraction === 0.5) return `${whole} كيلو ونصف`;
-    return `${roundedToHalf} كيلوغرام`;
+    if (rounded < 1000) return `${rounded}`;
+    if (remainder === 0) return `${thousands} الف`;
+    if (remainder === 500) return `${thousands} الف ونصف`;
+    return rounded.toLocaleString("en-US");
   }
 
   async function copyTextToClipboard(text){
@@ -570,7 +575,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const w = Number(widthEl.value);
 
     if (shape === "مستطيل" && w > h) {
-      alert("⚠️ لا يمكن أن يكون العرض أكبر من الطول. يرجى تعديل القياسات.");
+      alert("⚠️ لا يمكن أن يكون العرض أكبر من الطول.");
       widthEl.value = "";
       widthEl.focus();
       return;
@@ -593,14 +598,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
     trackButtonEvent("احسب");
 
-    const price = computePrice(shape,h,w);
+    const basePrice = computePrice(shape,h,w);
+
+    if(basePrice === null){
+      alert("هذا العرض يحتاج تسعير إضافي حتى 1.5 متر.");
+      return;
+    }
+
+    const price = basePrice + DELIVERY_INCLUDED_FEE;
     const area = computeArea(shape,h,w);
-    const weight = (area*0.0025*1250).toFixed(2);
+    const weight = (area * 0.0025 * 1250).toFixed(3);
 
     let dimsText;
-    if(shape==="مستطيل") dimsText = `${h} × ${w}`;
-    else if(shape==="مربع") dimsText = `${h} × ${h}`;
-    else dimsText = `${h}`;
+    let dimsCopyText;
+
+    if(shape === "مستطيل"){
+      dimsText = `${h} × ${w}`;
+      dimsCopyText = `${w}*${h}`;
+    }else if(shape === "مربع"){
+      dimsText = `${h} × ${h}`;
+      dimsCopyText = `${h}*${h}`;
+    }else{
+      dimsText = `${h}`;
+      dimsCopyText = `${h}`;
+    }
 
     const msg = encodeURIComponent(
       `مرحبا، أريد غطاء ${shape} بقياس ${dimsText} سم بسعر ${fmt(price)} د.ع`
@@ -612,7 +633,10 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="row">
         <div class="row-main">
           <i class="fa-solid fa-money-bill-wave"></i>
-          <div class="label">السعر</div>
+          <div class="label-wrap">
+            <div class="label">السعـــــــــــــر</div>
+            <div class="label-sub">شامل التوصيل</div>
+          </div>
         </div>
         <div class="value">
           <span class="num">${fmt(price)}</span>
@@ -658,8 +682,8 @@ document.addEventListener("DOMContentLoaded", () => {
       </a>
     `;
 
-    resultBox.dataset.copyText = `السعر مع التوصيل: ${formatPriceText(price)}
-وزن القياس ${dimsText}: ${formatWeightText(Number(weight))}`;
+    resultBox.dataset.copyText = `السعر شامل التوصيل : ${formatPriceTextForCopy(price)}
+الوزن للقياس (${dimsCopyText}) : ${weight} كيلوغرام`;
 
     resultBox.classList.add("show");
 
