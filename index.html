@@ -532,15 +532,30 @@ document.addEventListener("DOMContentLoaded", () => {
     return roundPriceToNearest500(n).toLocaleString("en-US");
   }
 
+  function toArabicDigits(value){
+    return String(value).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+  }
+
   function formatPriceTextForCopy(price){
     const rounded = roundPriceToNearest500(price);
     const thousands = Math.floor(rounded / 1000);
     const remainder = rounded % 1000;
 
-    if (rounded < 1000) return `${rounded}`;
-    if (remainder === 0) return `${thousands} الف`;
-    if (remainder === 500) return `${thousands} الف ونصف`;
-    return rounded.toLocaleString("en-US");
+    if (rounded < 1000) return `${toArabicDigits(rounded)} د.ع`;
+    if (remainder === 0) return `${toArabicDigits(thousands)} الف د.ع`;
+    if (remainder === 500) return `${toArabicDigits(thousands)} الف ونصف د.ع`;
+    return `${toArabicDigits(rounded)} د.ع`;
+  }
+
+  function formatWeightTextForCopy(weight){
+    const roundedToHalf = Math.round(weight * 2) / 2;
+    const whole = Math.floor(roundedToHalf);
+    const fraction = roundedToHalf - whole;
+
+    if (roundedToHalf === 0.5) return "نصف كيلوغرام";
+    if (fraction === 0) return `${toArabicDigits(whole)} كيلوغرام`;
+    if (fraction === 0.5) return `${toArabicDigits(whole)} كيلوغرام ونصف`;
+    return `${toArabicDigits(roundedToHalf)} كيلوغرام`;
   }
 
   async function copyTextToClipboard(text){
@@ -682,8 +697,8 @@ document.addEventListener("DOMContentLoaded", () => {
       </a>
     `;
 
-    resultBox.dataset.copyText = `السعر شامل التوصيل : ${formatPriceTextForCopy(price)}
-الوزن للقياس (${dimsCopyText}) : ${weight} كيلوغرام`;
+    resultBox.dataset.copyText = `السعر مع التوصيل: ${formatPriceTextForCopy(price)}
+الوزن للقياس ${dimsCopyText} = ${formatWeightTextForCopy(Number(weight))}`;
 
     resultBox.classList.add("show");
 
