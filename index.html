@@ -7,7 +7,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MR5JHB74D0"></script>
@@ -24,6 +24,8 @@
       --primary-700:#12b7b4;
       --success:#2fbf71;
       --success-700:#259c5d;
+      --blue:#3b82f6;
+      --blue-700:#2563eb;
       --text:#1f2a2e;
       --radius:14px;
       --radius-lg:18px;
@@ -211,7 +213,7 @@
       gap:10px;
     }
 
-    #result .row:last-child{
+    #result .row:last-of-type{
       border-bottom:none;
     }
 
@@ -241,14 +243,6 @@
       line-height:1.2;
     }
 
-    #result .label-sub{
-      font-size:.66rem;
-      font-weight:500;
-      color:#7a8c90;
-      line-height:1.1;
-      letter-spacing:0;
-    }
-
     #result .value{
       display:flex;
       align-items:center;
@@ -276,32 +270,208 @@
       border-radius:calc(var(--radius) + 4px);
       font-weight:800;
       font-size:1.05rem;
-      color:#fff;
       text-decoration:none;
+      cursor: pointer;
+      border: none;
+      font-family: 'IBM Plex Sans Arabic', sans-serif;
+    }
+
+    .checkout-btn {
+      color:#fff;
       background:linear-gradient(180deg,var(--success),var(--success-700));
       box-shadow:0 10px 24px rgba(37,156,93,.26);
     }
 
+    .add-to-cart-btn {
+      background: rgba(24, 220, 216, 0.12); 
+      color: #0e3f3f; 
+      border: 1px solid rgba(24, 220, 216, 0.4);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .add-to-cart-btn:hover {
+      background: rgba(24, 220, 216, 0.25);
+      border-color: #18dcd8;
+      box-shadow: 0 6px 15px rgba(24, 220, 216, 0.15);
+      transform: translateY(-1px);
+    }
+
+    .add-to-cart-btn i {
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      margin-right: 8px;
+    }
+
+    .add-to-cart-btn:hover i {
+      animation: cart-bounce 0.8s infinite;
+    }
+
+    @keyframes cart-bounce {
+      0%, 100% { transform: translateX(0) scale(1); }
+      30% { transform: translateX(-4px) scale(1.1); }
+      50% { transform: translateX(2px) scale(1.1) rotate(-5deg); }
+      70% { transform: translateX(-2px) scale(1.1) rotate(5deg); }
+    }
+
+    /* Cart Styles */
+    .cart-card {
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-lg);
+      margin-top: 25px;
+      overflow: hidden;
+      width: calc(100% - 36px); 
+      max-width: 444px;
+      margin-left: auto;
+      margin-right: auto;
+      cursor: pointer; 
+    }
+
+    .cart-header {
+      background: rgba(24,220,216,.1);
+      padding: 12px 18px;
+      text-align: center;
+      border-bottom: 1px solid rgba(24,220,216,.2);
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border-bottom: 1px dashed rgba(0,0,0,.08);
+      gap: 10px;
+    }
+
+    .cart-item:last-child {
+      border-bottom: none;
+    }
+
+    .cart-item-right {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch; 
+      gap: 6px; 
+    }
+
+    .cart-item-title {
+      font-weight: 700; 
+      font-size: 0.95rem;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .cart-item-badge {
+      display: flex;
+      align-items: center;
+      font-size: 0.8rem;
+      color: #0e3f3f;
+      background: rgba(24, 220, 216, 0.1);
+      border: 1px solid rgba(24, 220, 216, 0.25);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      gap: 6px;
+    }
+
+    .cart-item-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cart-item-price {
+      color: #6b7b80; 
+      font-weight: 500;
+      font-size: 0.9rem;
+      white-space: nowrap; 
+    }
+
+    .delete-btn {
+      color: #ff4d4f;
+      background: rgba(255, 77, 79, 0.08);
+      border: none;
+      cursor: pointer;
+      font-size: 0.85rem; 
+      padding: 6px 8px; 
+      border-radius: 6px;
+      transition: 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .delete-btn:hover {
+      background: #ff4d4f;
+      color: #fff;
+    }
+
+    .cart-totals {
+      padding: 16px 18px;
+      background: #fcfcfc;
+      border-top: 1px solid rgba(0,0,0,.05);
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      font-weight: 500; 
+      color: #6b7b80; 
+    }
+
+    .total-row.grand-total {
+      font-weight: 800;
+      font-size: 1.15rem;
+      border-top: 2px dashed rgba(24,220,216,.3);
+      padding-top: 12px;
+      margin-top: 8px;
+      color: #0e3f3f;
+    }
+
+    /* الخط الفاصل المعدل مع رأس السهم المزدوج */
     .section-divider{
       width:100%;
       max-width:480px;
-      margin:25px auto;
+      margin:30px auto 20px;
       height:1px;
       background:linear-gradient(to right, transparent, var(--primary), transparent);
       position:relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .section-divider .arrow-up{
-      position:absolute;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%) rotate(-135deg);
-      width:12px;
-      height:12px;
-      border:solid var(--primary);
-      border-width:0 2px 2px 0;
-      border-radius:2px;
-      background:#fff;
+    .scroll-up-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      color: var(--primary);
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.9rem;
+      border: 1px solid rgba(24, 220, 216, 0.3);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      z-index: 5;
+    }
+
+    .scroll-up-btn i {
+      animation: double-arrow-pulse 1.8s infinite ease-in-out;
+    }
+
+    /* حركة نبض للسهم المزدوج دون انفصال عن القاعدة */
+    @keyframes double-arrow-pulse {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50% { transform: translateY(-3px); opacity: 0.7; }
     }
 
     .notes{
@@ -350,14 +520,13 @@
 
 <div class="wrap">
 
-  <header class="site-head">
+  <header class="site-head" id="header">
     <div class="logo">
       <img src="https://cdn.imgpile.com/f/nQ5XZuf_xl.png" alt="Logo">
     </div>
   </header>
 
   <section class="card">
-
     <div class="card-head">
       <h1 class="card-title">يرجى إدخال المعلومات التالية</h1>
       <p class="card-sub">حدد الشكل وأدخل القياسات لتحصل على السعر فوراً</p>
@@ -368,9 +537,7 @@
     </div>
 
     <form class="content" novalidate>
-
       <div class="grid">
-
         <div class="field">
           <label>الشكل</label>
           <div class="select-wrap">
@@ -392,17 +559,46 @@
           <label>العرض (سم)</label>
           <input type="number" id="width" placeholder="ادخل العرض بالسنتيمتر" min="1"/>
         </div>
-
       </div>
 
       <button type="button" id="calcBtn">احسب</button>
-      <div id="result"></div>
-
+      <div id="result" title="اضغط لنسخ تفاصيل السعر"></div>
     </form>
-
   </section>
 
-  <div class="section-divider"></div>
+  <section class="card cart-card" id="cartContainer" style="display:none;" title="اضغط لنسخ تفاصيل الطلب">
+    <div class="cart-header">
+      <h2 class="card-title" style="font-size: 1.15rem; color: var(--primary-700);">
+        سلة المشتريات <i class="fa-solid fa-cart-plus" style="margin-right: 5px;"></i>
+      </h2>
+    </div>
+    
+    <div id="cartItemsList"></div>
+    
+    <div class="cart-totals">
+      <div class="total-row">
+        <span>المجموع:</span>
+        <span><span id="cartSubtotal">0</span> د.ع</span>
+      </div>
+      <div class="total-row">
+        <span>خدمة التوصيل:</span>
+        <span><span id="cartDelivery">5,000</span> د.ع</span>
+      </div>
+      <div class="total-row grand-total">
+        <span>السعر الكلي:</span>
+        <span><span id="cartTotal">0</span> د.ع</span>
+      </div>
+      <a class="order-button checkout-btn" id="checkoutBtn" href="#" target="_blank" style="margin-top: 15px;">
+        إرسال الطلب عبر واتساب <i class="fa-brands fa-whatsapp" style="margin-right:8px; font-size:1.2rem;"></i>
+      </a>
+    </div>
+  </section>
+
+  <div class="section-divider">
+    <div class="scroll-up-btn" id="scrollTopAction" title="العودة للأعلى">
+      <i class="fa-solid fa-angles-up"></i>
+    </div>
+  </div>
 
   <div class="notes">
     <div class="info-note">
@@ -424,11 +620,14 @@ document.addEventListener("DOMContentLoaded", () => {
   const RATE_100_TO_120 = 16200;
   const RATE_120_TO_150 = 20250;
   const EXTRA_CM_FOR_PRICING = 3;
-  const DELIVERY_INCLUDED_FEE = 5000;
+  const DELIVERY_FEE = 5000;
   const WA_NUMBER = "9647724522333";
 
   const MAX_H_CM = 2000;
   const MAX_W_CM = 200;
+
+  let cart = []; 
+  let tempItem = null; 
 
   const shapeEl  = document.getElementById("shape");
   const heightEl = document.getElementById("height");
@@ -437,6 +636,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const labelHeight = document.getElementById("labelHeight");
   const resultBox = document.getElementById("result");
   const calcBtn = document.getElementById("calcBtn");
+  const cartContainer = document.getElementById("cartContainer");
+  const scrollTopAction = document.getElementById("scrollTopAction");
+
+  // تفعيل خاصية الصعود للأعلى
+  scrollTopAction.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
 
   function trackButtonEvent(labelText) {
     if (typeof gtag !== "function") return;
@@ -463,6 +669,7 @@ document.addEventListener("DOMContentLoaded", () => {
     resultBox.classList.remove("show");
     resultBox.innerHTML = "";
     resultBox.dataset.copyText = "";
+    tempItem = null;
 
     if(shape === "مستطيل"){
       widthGrp.style.display = "";
@@ -584,6 +791,15 @@ document.addEventListener("DOMContentLoaded", () => {
     await copyTextToClipboard(copyText);
   });
 
+  cartContainer.addEventListener("click", async (e) => {
+    if(e.target.closest(".delete-btn") || e.target.closest(".checkout-btn")) return;
+
+    const copyText = cartContainer.dataset.copyText || "";
+    if(!copyText) return;
+
+    await copyTextToClipboard(copyText);
+  });
+
   calcBtn.addEventListener("click", ()=>{
     const shape = shapeEl.value;
     const h = Number(heightEl.value);
@@ -620,13 +836,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const price = basePrice + DELIVERY_INCLUDED_FEE;
+    const price = basePrice;
     const area = computeArea(shape,h,w);
     const weight = (area * 0.0025 * 1250).toFixed(3);
 
     let dimsText;
     let dimsCopyText;
-
     if(shape === "مستطيل"){
       dimsText = `${h} × ${w}`;
       dimsCopyText = `${w}*${h}`;
@@ -638,19 +853,19 @@ document.addEventListener("DOMContentLoaded", () => {
       dimsCopyText = `${h}`;
     }
 
-    const msg = encodeURIComponent(
-      `مرحبا، أريد غطاء ${shape} بقياس ${dimsText} سم بسعر ${fmt(price)} د.ع`
-    );
-
-    const waLink = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+    tempItem = {
+      shape: shape,
+      dimsText: dimsText,
+      price: price,
+      weight: weight
+    };
 
     resultBox.innerHTML = `
       <div class="row">
         <div class="row-main">
           <i class="fa-solid fa-money-bill-wave"></i>
           <div class="label-wrap">
-            <div class="label">السعـــــــــــــر</div>
-            <div class="label-sub">شامل التوصيل</div>
+            <div class="label">السعر</div>
           </div>
         </div>
         <div class="value">
@@ -662,10 +877,12 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="row">
         <div class="row-main">
           <i class="fa-solid fa-ruler"></i>
-          <div class="label">القياس</div>
+          <div class="label-wrap">
+            <div class="label">القياس</div>
+          </div>
         </div>
         <div class="value">
-          <span class="num">${dimsText}</span>
+          <span class="num" dir="ltr">${dimsText}</span>
           <span class="unit">سم</span>
         </div>
       </div>
@@ -673,7 +890,9 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="row">
         <div class="row-main">
           <i class="fa-solid fa-weight-hanging"></i>
-          <div class="label">الوزن</div>
+          <div class="label-wrap">
+            <div class="label">الوزن</div>
+          </div>
         </div>
         <div class="value">
           <span class="num">${weight}</span>
@@ -683,8 +902,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       <div class="row">
         <div class="row-main">
-          <i class="fa-solid fa-arrows-v"></i>
-          <div class="label">السُمك</div>
+          <i class="fa-solid fa-layer-group"></i>
+          <div class="label-wrap">
+            <div class="label">السُمك</div>
+          </div>
         </div>
         <div class="value">
           <span class="num">2.5</span>
@@ -692,23 +913,115 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       </div>
 
-      <a class="order-button" href="${waLink}" target="_blank">
-        اطلب الآن
-      </a>
+      <button type="button" class="order-button add-to-cart-btn" id="addToCartAction">
+        أضف إلى السلة <i class="fa-solid fa-cart-plus"></i>
+      </button>
     `;
 
-    resultBox.dataset.copyText = `السعر مع التوصيل: ${formatPriceTextForCopy(price)}
-الوزن للقياس ${dimsCopyText} = ${formatWeightTextForCopy(Number(weight))}`;
+    const priceWithDelivery = price + DELIVERY_FEE;
+    resultBox.dataset.copyText = `السعر مع التوصيل: ${formatPriceTextForCopy(priceWithDelivery)}\nالوزن للقياس ${dimsCopyText} = ${formatWeightTextForCopy(Number(weight))}`;
 
     resultBox.classList.add("show");
 
-    const orderBtn = resultBox.querySelector(".order-button");
-    if (orderBtn) {
-      orderBtn.addEventListener("click", function() {
-        trackButtonEvent("اطلب الآن");
+    const addToCartBtn = resultBox.querySelector("#addToCartAction");
+    if(addToCartBtn) {
+      addToCartBtn.addEventListener("click", () => {
+        trackButtonEvent("أضف إلى السلة");
+        if(tempItem) {
+          cart.push(tempItem);
+          tempItem = null;
+          updateCartUI();
+          
+          resultBox.classList.remove("show");
+          heightEl.value = "";
+          widthEl.value = "";
+          
+          cartContainer.scrollIntoView({ behavior: "smooth" });
+        }
       });
     }
   });
+
+  function updateCartUI() {
+    const cartItemsDiv = document.getElementById("cartItemsList");
+    const cartSubtotalEl = document.getElementById("cartSubtotal");
+    const cartTotalEl = document.getElementById("cartTotal");
+    const checkoutBtn = document.getElementById("checkoutBtn");
+
+    if(cart.length === 0) {
+      cartContainer.style.display = "none";
+      return;
+    }
+
+    cartContainer.style.display = "block";
+    cartItemsDiv.innerHTML = "";
+
+    let subtotal = 0;
+
+    cart.forEach((item, index) => {
+      subtotal += item.price;
+
+      let shapeTitleText = "";
+      if (item.shape === "مستطيل") shapeTitleText = "غطاء مستطيل";
+      else if (item.shape === "مربع") shapeTitleText = "غطاء مربع";
+      else if (item.shape === "دائري") shapeTitleText = "غطاء دائري";
+
+      const itemDiv = document.createElement("div");
+      itemDiv.className = "cart-item";
+      
+      itemDiv.innerHTML = `
+        <div class="cart-item-right">
+          <span class="cart-item-title">${index + 1}. ${shapeTitleText}</span>
+          <div class="cart-item-badge">
+            <span>القياس:</span>
+            <span dir="ltr" style="display:inline-block">${item.dimsText}</span>
+            <span>سم</span>
+          </div>
+        </div>
+        <div class="cart-item-left">
+          <span class="cart-item-price">${fmt(item.price)} د.ع</span>
+          <button class="delete-btn" title="حذف العنصر"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+      `;
+
+      const deleteBtn = itemDiv.querySelector(".delete-btn");
+      deleteBtn.onclick = () => {
+        cart.splice(index, 1);
+        updateCartUI();
+      };
+
+      cartItemsDiv.appendChild(itemDiv);
+    });
+
+    const grandTotal = subtotal + DELIVERY_FEE;
+    
+    cartSubtotalEl.textContent = fmt(subtotal);
+    cartTotalEl.textContent = fmt(grandTotal);
+
+    let msg = "🧾 تفاصيل الطلب:\n\n";
+    cart.forEach((item, index) => {
+      let shapeTitleText = "";
+      if (item.shape === "مستطيل") shapeTitleText = "غطاء مستطيل";
+      else if (item.shape === "مربع") shapeTitleText = "غطاء مربع";
+      else if (item.shape === "دائري") shapeTitleText = "غطاء دائري";
+
+      msg += `${index + 1}. ${shapeTitleText}\n`;
+      msg += `القياس: ${item.dimsText.replace(' × ', '*')} سم\n`;
+      msg += `السعر: ${fmt(item.price)} د.ع\n\n`;
+    });
+    
+    msg += `﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n`;
+    msg += `المجموع: ${fmt(subtotal)} د.ع\n`;
+    msg += `خدمة التوصيل: ${fmt(DELIVERY_FEE)} د.ع\n`;
+    msg += `السعر الكلي: ${fmt(grandTotal)} د.ع`;
+
+    cartContainer.dataset.copyText = msg;
+
+    checkoutBtn.href = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+    checkoutBtn.onclick = () => {
+      trackButtonEvent("إرسال الطلب عبر واتساب");
+    };
+  }
 
   updateFields();
 });
