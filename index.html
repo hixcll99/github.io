@@ -138,7 +138,8 @@
       display:block;
     }
 
-    input[type="number"],
+    /* تم تعديل التنسيق هنا ليشمل الحقول النصية التي تستخدم للأرقام */
+    input[type="text"].num-input,
     select{
       width:100%;
       padding:12px 14px;
@@ -150,7 +151,7 @@
       appearance:none;
     }
 
-    input[type="number"]:focus,
+    input[type="text"].num-input:focus,
     select:focus{
       outline:none !important;
       border-color:var(--primary) !important;
@@ -190,7 +191,7 @@
     }
 
     #result{
-      margin-top:18px;
+      margin-top:4px;
       padding:14px 14px 16px;
       border-radius:var(--radius-lg);
       border:1px solid rgba(24,220,216,.22);
@@ -290,6 +291,7 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      margin-top: 14px;
     }
 
     .add-to-cart-btn:hover {
@@ -300,11 +302,7 @@
     }
 
     .add-to-cart-btn i {
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       margin-right: 8px;
-    }
-
-    .add-to-cart-btn:hover i {
       animation: cart-bounce 0.8s infinite;
     }
 
@@ -431,47 +429,73 @@
       color: #0e3f3f;
     }
 
-    /* الخط الفاصل المعدل مع رأس السهم المزدوج */
-    .section-divider{
-      width:100%;
-      max-width:480px;
-      margin:30px auto 20px;
-      height:1px;
-      background:linear-gradient(to right, transparent, var(--primary), transparent);
-      position:relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    /* زر إضافة قياس آخر */
+    .add-more-btn {
+      background: rgba(24, 220, 216, 0.05);
+      color: var(--primary-700);
+      border: 1.5px dashed var(--primary);
+      margin-top: 20px;
+      margin-bottom: -5px;
+      transition: all 0.3s ease;
+      font-size: 1rem;
     }
 
-    .scroll-up-btn {
+    .add-more-btn:hover {
+      background: rgba(24, 220, 216, 0.15);
+      border-style: solid;
+      border-color: var(--primary-700);
+      box-shadow: 0 6px 15px rgba(24, 220, 216, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .add-more-btn i {
+      transition: transform 0.4s ease;
+    }
+
+    .add-more-btn:hover i {
+      transform: rotate(90deg);
+    }
+
+    /* الخط الفاصل السفلي المتناسق تماماً مع الخط العلوي */
+    .section-divider {
+      width: 100%;
+      max-width: 480px;
+      margin: 30px auto 20px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--primary), transparent);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .scroll-arrows {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: #fff;
-      color: var(--primary);
-      width: 28px;
-      height: 28px;
+      background: #ffffff;
+      padding: 6px 4px;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 0.9rem;
-      border: 1px solid rgba(24, 220, 216, 0.3);
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-      z-index: 5;
     }
 
-    .scroll-up-btn i {
-      animation: double-arrow-pulse 1.8s infinite ease-in-out;
+    .arrow-up {
+      width: 12px;
+      height: 12px;
+      border: solid var(--primary);
+      border-width: 2px 0 0 2px;
+      border-radius: 2px;
+      transform: rotate(45deg);
     }
 
-    /* حركة نبض للسهم المزدوج دون انفصال عن القاعدة */
-    @keyframes double-arrow-pulse {
-      0%, 100% { transform: translateY(0); opacity: 1; }
-      50% { transform: translateY(-3px); opacity: 0.7; }
+    .top-arrow {
+      margin-bottom: -5px;
+      animation: bounce-up 1.5s infinite ease-in-out;
+    }
+
+    @keyframes bounce-up {
+      0%, 100% { transform: translateY(0) rotate(45deg); opacity: 1; }
+      50% { transform: translateY(-4px) rotate(45deg); opacity: 0.5; }
     }
 
     .notes{
@@ -552,16 +576,21 @@
 
         <div class="field" id="heightGroup">
           <label id="labelHeight">الطول (سم)</label>
-          <input type="number" id="height" placeholder="ادخل الطول بالسنتيمتر" min="1"/>
+          <input type="text" inputmode="numeric" class="num-input" id="height" placeholder="ادخل الطول بالسنتيمتر" />
         </div>
 
         <div class="field" id="widthGroup">
           <label>العرض (سم)</label>
-          <input type="number" id="width" placeholder="ادخل العرض بالسنتيمتر" min="1"/>
+          <input type="text" inputmode="numeric" class="num-input" id="width" placeholder="ادخل العرض بالسنتيمتر" />
         </div>
       </div>
 
       <button type="button" id="calcBtn">احسب</button>
+      
+      <button type="button" class="order-button add-to-cart-btn" id="addToCartAction" style="display: none;">
+        أضف إلى السلة <i class="fa-solid fa-cart-plus"></i>
+      </button>
+
       <div id="result" title="اضغط لنسخ تفاصيل السعر"></div>
     </form>
   </section>
@@ -588,15 +617,21 @@
         <span>السعر الكلي:</span>
         <span><span id="cartTotal">0</span> د.ع</span>
       </div>
+      
+      <button type="button" class="order-button add-more-btn" id="addMoreBtn">
+        إضافة قياس آخر <i class="fa-solid fa-plus-circle" style="margin-right: 8px;"></i>
+      </button>
+
       <a class="order-button checkout-btn" id="checkoutBtn" href="#" target="_blank" style="margin-top: 15px;">
         إرسال الطلب عبر واتساب <i class="fa-brands fa-whatsapp" style="margin-right:8px; font-size:1.2rem;"></i>
       </a>
     </div>
   </section>
 
-  <div class="section-divider">
-    <div class="scroll-up-btn" id="scrollTopAction" title="العودة للأعلى">
-      <i class="fa-solid fa-angles-up"></i>
+  <div class="section-divider" id="scrollTopAction" title="العودة للأعلى">
+    <div class="scroll-arrows">
+      <span class="arrow-up top-arrow"></span>
+      <span class="arrow-up bottom-arrow"></span>
     </div>
   </div>
 
@@ -636,10 +671,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const labelHeight = document.getElementById("labelHeight");
   const resultBox = document.getElementById("result");
   const calcBtn = document.getElementById("calcBtn");
+  const addToCartBtn = document.getElementById("addToCartAction"); 
   const cartContainer = document.getElementById("cartContainer");
   const scrollTopAction = document.getElementById("scrollTopAction");
+  const addMoreBtn = document.getElementById("addMoreBtn");
 
-  // تفعيل خاصية الصعود للأعلى
   scrollTopAction.addEventListener("click", () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   });
@@ -654,10 +690,21 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  // الدالة المُحدثة: تقوم بتحويل الأرقام العربية إلى إنجليزية وتمنع الحروف
   function clean(el){
     el.addEventListener("input",()=>{
-      el.value = el.value.replace(/[^0-9]/g,"");
-      if(el.value !== "" && Number(el.value) < 1) el.value = "1";
+      // 1. استبدال الأرقام العربية (٠-٩) بما يعادلها من الأرقام الإنجليزية (0-9)
+      let val = el.value.replace(/[٠١٢٣٤٥٦٧٨٩]/g, function(d) {
+        return d.charCodeAt(0) - 1632; 
+      });
+      
+      // 2. إزالة أي رمز أو حرف غير رقمي
+      val = val.replace(/[^0-9]/g, "");
+      
+      // 3. منع إدخال قيمة أقل من 1
+      if(val !== "" && Number(val) < 1) val = "1";
+      
+      el.value = val;
     });
   }
 
@@ -667,6 +714,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function updateFields(){
     const shape = shapeEl.value;
     resultBox.classList.remove("show");
+    addToCartBtn.style.display = "none"; 
     resultBox.innerHTML = "";
     resultBox.dataset.copyText = "";
     tempItem = null;
@@ -783,21 +831,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
   resultBox.addEventListener("click", async (e) => {
     if(!resultBox.classList.contains("show")) return;
-    if(e.target.closest(".order-button")) return;
-
     const copyText = resultBox.dataset.copyText || "";
     if(!copyText) return;
-
     await copyTextToClipboard(copyText);
   });
 
   cartContainer.addEventListener("click", async (e) => {
-    if(e.target.closest(".delete-btn") || e.target.closest(".checkout-btn")) return;
-
+    if(e.target.closest(".delete-btn") || e.target.closest(".checkout-btn") || e.target.closest(".add-more-btn")) return;
     const copyText = cartContainer.dataset.copyText || "";
     if(!copyText) return;
-
     await copyTextToClipboard(copyText);
+  });
+
+  addToCartBtn.addEventListener("click", () => {
+    trackButtonEvent("أضف إلى السلة");
+    if(tempItem) {
+      cart.push(tempItem);
+      tempItem = null;
+      updateCartUI();
+      
+      resultBox.classList.remove("show");
+      addToCartBtn.style.display = "none";
+      heightEl.value = "";
+      widthEl.value = "";
+      
+      cartContainer.scrollIntoView({ behavior: "smooth" });
+    }
   });
 
   calcBtn.addEventListener("click", ()=>{
@@ -912,34 +971,14 @@ document.addEventListener("DOMContentLoaded", () => {
           <span class="unit">ملم</span>
         </div>
       </div>
-
-      <button type="button" class="order-button add-to-cart-btn" id="addToCartAction">
-        أضف إلى السلة <i class="fa-solid fa-cart-plus"></i>
-      </button>
     `;
 
     const priceWithDelivery = price + DELIVERY_FEE;
     resultBox.dataset.copyText = `السعر مع التوصيل: ${formatPriceTextForCopy(priceWithDelivery)}\nالوزن للقياس ${dimsCopyText} = ${formatWeightTextForCopy(Number(weight))}`;
 
     resultBox.classList.add("show");
-
-    const addToCartBtn = resultBox.querySelector("#addToCartAction");
-    if(addToCartBtn) {
-      addToCartBtn.addEventListener("click", () => {
-        trackButtonEvent("أضف إلى السلة");
-        if(tempItem) {
-          cart.push(tempItem);
-          tempItem = null;
-          updateCartUI();
-          
-          resultBox.classList.remove("show");
-          heightEl.value = "";
-          widthEl.value = "";
-          
-          cartContainer.scrollIntoView({ behavior: "smooth" });
-        }
-      });
-    }
+    
+    addToCartBtn.style.display = "flex";
   });
 
   function updateCartUI() {
@@ -1022,6 +1061,21 @@ document.addEventListener("DOMContentLoaded", () => {
       trackButtonEvent("إرسال الطلب عبر واتساب");
     };
   }
+
+  addMoreBtn.addEventListener("click", () => {
+    trackButtonEvent("إضافة قياس آخر");
+    
+    document.querySelector(".card").scrollIntoView({ behavior: "smooth" });
+    
+    heightEl.value = "";
+    widthEl.value = "";
+    resultBox.classList.remove("show");
+    addToCartBtn.style.display = "none";
+    
+    setTimeout(() => {
+      heightEl.focus();
+    }, 600);
+  });
 
   updateFields();
 });
