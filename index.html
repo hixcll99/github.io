@@ -138,7 +138,6 @@
       display:block;
     }
 
-    /* تم تعديل التنسيق هنا ليشمل الحقول النصية التي تستخدم للأرقام */
     input[type="text"].num-input,
     select{
       width:100%;
@@ -313,7 +312,6 @@
       70% { transform: translateX(-2px) scale(1.1) rotate(5deg); }
     }
 
-    /* Cart Styles */
     .cart-card {
       border: 2px solid var(--primary);
       border-radius: var(--radius-lg);
@@ -360,6 +358,13 @@
       line-height: 1.2;
     }
 
+    .cart-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .cart-item-badge {
       display: flex;
       align-items: center;
@@ -371,6 +376,46 @@
       border-radius: 6px;
       font-weight: 600;
       gap: 6px;
+    }
+
+    /* CSS لتنسيق أزرار الكمية الجديدة داخل السلة */
+    .quantity-control {
+      display: flex;
+      align-items: center;
+      background: #f8fbfb;
+      border: 1px solid rgba(24, 220, 216, 0.3);
+      border-radius: 6px;
+      overflow: hidden;
+      height: 26px;
+    }
+
+    .qty-btn {
+      background: transparent;
+      border: none;
+      color: var(--primary-700);
+      cursor: pointer;
+      width: 26px;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+
+    .qty-btn:hover {
+      background: rgba(24, 220, 216, 0.2);
+    }
+
+    .qty-val {
+      font-weight: 700;
+      font-size: 0.85rem;
+      min-width: 20px;
+      text-align: center;
+      color: #0e3f3f;
+      border-left: 1px solid rgba(24, 220, 216, 0.15);
+      border-right: 1px solid rgba(24, 220, 216, 0.15);
+      padding: 0 4px;
+      line-height: 26px;
     }
 
     .cart-item-left {
@@ -429,7 +474,6 @@
       color: #0e3f3f;
     }
 
-    /* زر إضافة قياس آخر */
     .add-more-btn {
       background: rgba(24, 220, 216, 0.05);
       color: var(--primary-700);
@@ -456,7 +500,6 @@
       transform: rotate(90deg);
     }
 
-    /* الخط الفاصل السفلي المتناسق تماماً مع الخط العلوي */
     .section-divider {
       width: 100%;
       max-width: 480px;
@@ -690,20 +733,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // الدالة المُحدثة: تقوم بتحويل الأرقام العربية إلى إنجليزية وتمنع الحروف
   function clean(el){
     el.addEventListener("input",()=>{
-      // 1. استبدال الأرقام العربية (٠-٩) بما يعادلها من الأرقام الإنجليزية (0-9)
       let val = el.value.replace(/[٠١٢٣٤٥٦٧٨٩]/g, function(d) {
         return d.charCodeAt(0) - 1632; 
       });
-      
-      // 2. إزالة أي رمز أو حرف غير رقمي
       val = val.replace(/[^0-9]/g, "");
-      
-      // 3. منع إدخال قيمة أقل من 1
       if(val !== "" && Number(val) < 1) val = "1";
-      
       el.value = val;
     });
   }
@@ -762,7 +798,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if(shape === "مربع"){
       effectiveWidth = h;
     }
-
     if(shape === "دائري"){
       effectiveWidth = h;
       effectiveLength = h;
@@ -837,7 +872,8 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   cartContainer.addEventListener("click", async (e) => {
-    if(e.target.closest(".delete-btn") || e.target.closest(".checkout-btn") || e.target.closest(".add-more-btn")) return;
+    // منع النسخ عند النقر على أزرار التحكم
+    if(e.target.closest(".delete-btn") || e.target.closest(".checkout-btn") || e.target.closest(".add-more-btn") || e.target.closest(".qty-btn")) return;
     const copyText = cartContainer.dataset.copyText || "";
     if(!copyText) return;
     await copyTextToClipboard(copyText);
@@ -846,7 +882,15 @@ document.addEventListener("DOMContentLoaded", () => {
   addToCartBtn.addEventListener("click", () => {
     trackButtonEvent("أضف إلى السلة");
     if(tempItem) {
-      cart.push(tempItem);
+      // التحقق مما إذا كان هذا القياس موجوداً مسبقاً في السلة لزيادة الكمية فقط
+      const existingItemIndex = cart.findIndex(item => item.shape === tempItem.shape && item.dimsText === tempItem.dimsText);
+      
+      if (existingItemIndex > -1) {
+        cart[existingItemIndex].quantity += 1;
+      } else {
+        cart.push(tempItem);
+      }
+      
       tempItem = null;
       updateCartUI();
       
@@ -895,7 +939,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const price = basePrice;
+    const price = roundPriceToNearest500(basePrice);
     const area = computeArea(shape,h,w);
     const weight = (area * 0.0025 * 1250).toFixed(3);
 
@@ -912,11 +956,13 @@ document.addEventListener("DOMContentLoaded", () => {
       dimsCopyText = `${h}`;
     }
 
+    // تعيين الكمية الافتراضية إلى 1 عند الحساب
     tempItem = {
       shape: shape,
       dimsText: dimsText,
       price: price,
-      weight: weight
+      weight: weight,
+      quantity: 1 
     };
 
     resultBox.innerHTML = `
@@ -998,7 +1044,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let subtotal = 0;
 
     cart.forEach((item, index) => {
-      subtotal += item.price;
+      // ضرب السعر في الكمية لحساب المجموع الفرعي
+      subtotal += (item.price * item.quantity);
 
       let shapeTitleText = "";
       if (item.shape === "مستطيل") shapeTitleText = "غطاء مستطيل";
@@ -1008,23 +1055,51 @@ document.addEventListener("DOMContentLoaded", () => {
       const itemDiv = document.createElement("div");
       itemDiv.className = "cart-item";
       
+      // دمج أزرار التحكم بالكمية في واجهة العنصر
       itemDiv.innerHTML = `
         <div class="cart-item-right">
           <span class="cart-item-title">${index + 1}. ${shapeTitleText}</span>
-          <div class="cart-item-badge">
-            <span>القياس:</span>
-            <span dir="ltr" style="display:inline-block">${item.dimsText}</span>
-            <span>سم</span>
+          <div class="cart-item-meta">
+            <div class="cart-item-badge">
+              <span>القياس:</span>
+              <span dir="ltr" style="display:inline-block">${item.dimsText}</span>
+              <span>سم</span>
+            </div>
+            <div class="quantity-control">
+              <button type="button" class="qty-btn plus-btn" title="زيادة الكمية"><i class="fa-solid fa-plus" style="font-size:0.75rem;"></i></button>
+              <span class="qty-val">${item.quantity}</span>
+              <button type="button" class="qty-btn minus-btn" title="تقليل الكمية"><i class="fa-solid fa-minus" style="font-size:0.75rem;"></i></button>
+            </div>
           </div>
         </div>
         <div class="cart-item-left">
-          <span class="cart-item-price">${fmt(item.price)} د.ع</span>
+          <span class="cart-item-price">${fmt(item.price * item.quantity)} د.ع</span>
           <button class="delete-btn" title="حذف العنصر"><i class="fa-solid fa-trash-can"></i></button>
         </div>
       `;
 
+      // برمجة زر الزيادة
+      const plusBtn = itemDiv.querySelector(".plus-btn");
+      plusBtn.onclick = (e) => {
+        e.stopPropagation();
+        cart[index].quantity += 1;
+        updateCartUI();
+      };
+
+      // برمجة زر النقصان
+      const minusBtn = itemDiv.querySelector(".minus-btn");
+      minusBtn.onclick = (e) => {
+        e.stopPropagation();
+        if (cart[index].quantity > 1) {
+          cart[index].quantity -= 1;
+          updateCartUI();
+        }
+      };
+
+      // برمجة زر الحذف
       const deleteBtn = itemDiv.querySelector(".delete-btn");
-      deleteBtn.onclick = () => {
+      deleteBtn.onclick = (e) => {
+        e.stopPropagation();
         cart.splice(index, 1);
         updateCartUI();
       };
@@ -1037,6 +1112,7 @@ document.addEventListener("DOMContentLoaded", () => {
     cartSubtotalEl.textContent = fmt(subtotal);
     cartTotalEl.textContent = fmt(grandTotal);
 
+    // تحديث رسالة الواتساب لتشمل الكميات
     let msg = "🧾 تفاصيل الطلب:\n\n";
     cart.forEach((item, index) => {
       let shapeTitleText = "";
@@ -1044,9 +1120,9 @@ document.addEventListener("DOMContentLoaded", () => {
       else if (item.shape === "مربع") shapeTitleText = "غطاء مربع";
       else if (item.shape === "دائري") shapeTitleText = "غطاء دائري";
 
-      msg += `${index + 1}. ${shapeTitleText}\n`;
+      msg += `${index + 1}. ${shapeTitleText} (الكمية: ${item.quantity})\n`;
       msg += `القياس: ${item.dimsText.replace(' × ', '*')} سم\n`;
-      msg += `السعر: ${fmt(item.price)} د.ع\n\n`;
+      msg += `السعر: ${fmt(item.price * item.quantity)} د.ع\n\n`;
     });
     
     msg += `﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏\n`;
